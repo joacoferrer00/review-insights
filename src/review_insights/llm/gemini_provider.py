@@ -31,11 +31,24 @@ class GeminiProvider(LLMProvider):
             config=config,
         )
 
+        if not response.candidates:
+            feedback = getattr(response, "prompt_feedback", None)
+            raise ValueError(f"Gemini returned no candidates (prompt_feedback: {feedback})")
+
         candidate = response.candidates[0]
+
+        if not candidate.content or not candidate.content.parts:
+            raise ValueError(
+                f"Gemini candidate has no content parts (finish_reason: {candidate.finish_reason})"
+            )
+
+        # With thinking enabled, parts may include a thinking part before the response.
+        # Use the last part which is always the actual text response.
+        text = candidate.content.parts[-1].text
         usage = response.usage_metadata
 
         return LLMResponse(
-            text=candidate.content.parts[0].text,
+            text=text,
             model=self._model,
             prompt_tokens=getattr(usage, "prompt_token_count", None),
             completion_tokens=getattr(usage, "candidates_token_count", None),
