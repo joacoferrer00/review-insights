@@ -18,7 +18,8 @@ def aggregate(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Aggregate classified reviews into the two summary canonical tables.
 
     Args:
-        df: Full reviews_classified DataFrame (250 rows, including rating-only).
+        df: Full reviews_classified DataFrame (1 row per (review_id, mention_id),
+            including rating-only rows with null mention_id).
 
     Returns:
         Tuple of (aggregated_df, insights_df).
@@ -41,16 +42,35 @@ def aggregate(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 def _build_aggregated(df: pd.DataFrame, classified: pd.DataFrame) -> pd.DataFrame:
-    base = (
-        df.groupby("business_name")
-        .agg(
-            total_reviews=("review_id", "count"),
-            reviews_with_text=("has_text", "sum"),
-            avg_rating=("stars", "mean"),
-        )
+    # Each of these three metrics must deduplicate by review_id because the
+    # multi-mention schema produces N rows per review. Without dedup, a review
+    # mentioning 3 topics would count as 3 reviews.
+    deduped = df.drop_duplicates(subset="review_id")
+
+    total = (
+        deduped.groupby("business_name")["review_id"]
+        .nunique()
+        .rename("total_reviews")
         .reset_index()
     )
-    base["avg_rating"] = base["avg_rating"].round(1)
+    with_text = (
+        deduped[deduped["has_text"]]
+        .groupby("business_name")["review_id"]
+        .nunique()
+        .rename("reviews_with_text")
+        .reset_index()
+    )
+    avg_rating = (
+        deduped.groupby("business_name")["stars"]
+        .mean()
+        .round(1)
+        .rename("avg_rating")
+        .reset_index()
+    )
+
+    base = total.merge(with_text, on="business_name", how="left").merge(
+        avg_rating, on="business_name", how="left"
+    )
 
     sentiment_counts = (
         classified.groupby(["business_name", "sentiment"])

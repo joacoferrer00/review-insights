@@ -34,9 +34,9 @@ from review_insights.llm.gemini_provider import GeminiProvider
 
 
 def main() -> None:
-    api_key = os.environ.get("GOOGLE_API_KEY")
+    api_key = os.environ.get("LLM_API_KEY")
     if not api_key:
-        raise EnvironmentError("GOOGLE_API_KEY not set — add it to .env")
+        raise EnvironmentError("LLM_API_KEY not set — add it to .env")
 
     model = os.environ.get("LLM_MODEL", "gemini-2.5-flash-preview-04-17")
 
