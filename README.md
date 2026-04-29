@@ -48,8 +48,6 @@ streamlit run app.py        # launches the dashboard
 | `src/review_insights/` | Package: ingestion, cleaning, classification, aggregation, reporting |
 | `prompts/` | Versioned LLM prompts |
 | `data/processed/` | Canonical tables (aggregated, classified, insights) |
-| `docs/product/` | ICP, offer, pricing, outreach scripts |
-| `CLAUDE.md` | Project constitution for AI agents |
 
 ## License
 

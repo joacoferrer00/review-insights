@@ -83,3 +83,14 @@ review-insights_ChatGPT*
 # --- Logs ---
 *.log
 logs/
+
+# --- Internal project docs (not for public repo) ---
+CLAUDE.md
+DECISIONS.md
+ROADMAP.md
+PROJECT_BRIEF.md
+plannings/
+.claude/agents/
+docs/**
+!docs/assets/
+!docs/assets/**
