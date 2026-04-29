@@ -64,6 +64,7 @@ data/raw/*
 data/interim/*
 data/processed/*
 !data/**/.gitkeep
+!data/processed/*.csv
 
 # Sample data IS versioned (it's anonymized / public)
 # data/sample/  ← do NOT ignore
