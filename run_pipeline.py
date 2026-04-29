@@ -4,7 +4,7 @@ Usage:
     python run_pipeline.py
 
 Reads LLM_API_KEY and LLM_MODEL from .env (or environment).
-Produces the canonical tables in data/interim/ and data/processed/.
+Produces the canonical tables in data/1_raw/ through data/5_enriched/.
 
 Each step is skipped if its output file already exists.
 Delete the relevant file(s) to force a re-run from that step.
@@ -45,21 +45,19 @@ def main() -> None:
     model = os.environ.get("LLM_MODEL", "gemini-2.5-flash-lite-preview-06-17")
 
     raw_paths = [
-        Path("data/sample/IDA_reviews_sample.json"),
-        Path("data/sample/competitors_reviews_sample.json"),
+        Path("data/0_input/IDA_reviews_sample.json"),
+        Path("data/0_input/competitors_reviews_sample.json"),
     ]
 
-    interim_dir = Path("data/interim")
-    processed_dir = Path("data/processed")
-    interim_dir.mkdir(parents=True, exist_ok=True)
-    processed_dir.mkdir(parents=True, exist_ok=True)
+    for d in ["data/1_raw", "data/2_clean", "data/3_classified", "data/4_aggregated", "data/5_enriched"]:
+        Path(d).mkdir(parents=True, exist_ok=True)
 
-    raw_csv = interim_dir / "raw.csv"
-    clean_csv = interim_dir / "reviews_clean.csv"
-    classified_csv = processed_dir / "reviews_classified.csv"
-    aggregated_csv = processed_dir / "aggregated.csv"
-    insights_csv = processed_dir / "insights.csv"
-    enriched_csv = processed_dir / "insights_enriched.csv"
+    raw_csv = Path("data/1_raw/raw.csv")
+    clean_csv = Path("data/2_clean/reviews_clean.csv")
+    classified_csv = Path("data/3_classified/reviews_classified.csv")
+    aggregated_csv = Path("data/4_aggregated/aggregated.csv")
+    insights_csv = Path("data/4_aggregated/insights.csv")
+    enriched_csv = Path("data/5_enriched/insights_enriched.csv")
 
     t0 = time.time()
 

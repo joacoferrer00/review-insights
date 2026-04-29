@@ -47,7 +47,7 @@ streamlit run app.py        # launches the dashboard
 | `run_pipeline.py` | End-to-end pipeline runner |
 | `src/review_insights/` | Package: ingestion, cleaning, classification, aggregation, reporting |
 | `prompts/` | Versioned LLM prompts |
-| `data/processed/` | Canonical tables (aggregated, classified, insights) |
+| `data/{0_input..5_enriched}/` | Pipeline stages: input JSONs → raw → clean → classified → aggregated → enriched |
 
 ## License
 

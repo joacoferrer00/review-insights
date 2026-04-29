@@ -6,7 +6,10 @@ import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 
-DATA_DIR = Path(__file__).parent.parent.parent.parent / "data" / "processed"
+_ROOT = Path(__file__).parent.parent.parent.parent / "data"
+_DIR_CLASSIFIED = _ROOT / "3_classified"
+_DIR_AGGREGATED = _ROOT / "4_aggregated"
+_DIR_ENRICHED = _ROOT / "5_enriched"
 
 # ── Color palette ────────────────────────────────────────────────────────────
 
@@ -37,12 +40,12 @@ URGENCY_ES = {"high": "Alta", "medium": "Media", "low": "Baja"}
 
 
 def load_aggregated() -> pd.DataFrame:
-    return pd.read_csv(DATA_DIR / "aggregated.csv")
+    return pd.read_csv(_DIR_AGGREGATED / "aggregated.csv")
 
 
 def load_insights() -> pd.DataFrame:
-    enriched = DATA_DIR / "insights_enriched.csv"
-    path = enriched if enriched.exists() else DATA_DIR / "insights.csv"
+    enriched = _DIR_ENRICHED / "insights_enriched.csv"
+    path = enriched if enriched.exists() else _DIR_AGGREGATED / "insights.csv"
     df = pd.read_csv(path)
     if "main_topic" in df.columns:
         df["main_topic"] = df["main_topic"].map(TOPIC_ES).fillna(df["main_topic"])
@@ -50,7 +53,7 @@ def load_insights() -> pd.DataFrame:
 
 
 def load_classified() -> pd.DataFrame:
-    df = pd.read_csv(DATA_DIR / "reviews_classified.csv")
+    df = pd.read_csv(_DIR_CLASSIFIED / "reviews_classified.csv")
     df["date_parsed"] = pd.to_datetime(df["date_parsed"], errors="coerce")
     df["is_actionable"] = df["is_actionable"].astype(str).str.lower().map({"true": True, "false": False})
     df["main_topic"] = df["main_topic"].map(TOPIC_ES).fillna(df["main_topic"])

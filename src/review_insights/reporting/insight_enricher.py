@@ -14,8 +14,7 @@ from review_insights.llm.base import LLMProvider, LLMRequest
 logger = logging.getLogger(__name__)
 
 _PROMPT_PATH = Path(__file__).resolve().parents[3] / "prompts" / "insight_enrichment_prompt.md"
-_DATA_DIR = Path(__file__).resolve().parents[3] / "data" / "processed"
-_OUTPUT_PATH = _DATA_DIR / "insights_enriched.csv"
+_OUTPUT_PATH = Path(__file__).resolve().parents[3] / "data" / "5_enriched" / "insights_enriched.csv"
 _TOP_QUOTES = 5
 _MAX_RETRIES = 3
 
