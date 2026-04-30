@@ -74,6 +74,7 @@ data/processed/*_v1.csv
 outputs/dashboards/*
 outputs/reports/*
 outputs/exports/*
+outputs/tmp/*
 !outputs/**/.gitkeep
 
 # --- Reference material (kept locally, not in repo) ---
