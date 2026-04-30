@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 11pt;
+  color: #1a1a2e;
+  background: #fff;
+}
+
+/* ── Page breaks ─────────────────────────────────────── */
+.page {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 18mm 18mm 16mm;
+  page-break-after: always;
+  position: relative;
+  overflow: hidden;
+}
+.page:last-child { page-break-after: avoid; }
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+/* ── Colour tokens ───────────────────────────────────── */
+:root {
+  --brand:   #1e3a8a;
+  --accent:  #3b82f6;
+  --danger:  #dc2626;
+  --warn:    #f59e0b;
+  --ok:      #16a34a;
+  --muted:   #6b7280;
+  --border:  #e5e7eb;
+  --bg-alt:  #f8fafc;
+}
+
+/* ── Typography helpers ──────────────────────────────── */
+h1 { font-size: 28pt; font-weight: 700; color: var(--brand); }
+h2 { font-size: 14pt; font-weight: 600; color: var(--brand); margin-bottom: 10px; }
+h3 { font-size: 11pt; font-weight: 600; margin-bottom: 6px; }
+p  { line-height: 1.6; margin-bottom: 8px; }
+
+.muted  { color: var(--muted); font-size: 9.5pt; }
+.label  { font-size: 8.5pt; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+.divider { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+
+/* ── Page 1 — Cover ─────────────────────────────────── */
+.cover {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 297mm;
+  background: linear-gradient(160deg, #1e3a8a 0%, #1e40af 60%, #3b82f6 100%);
+  color: #fff;
+  padding: 24mm 22mm;
+}
+.cover h1 { color: #fff; font-size: 32pt; line-height: 1.2; margin-bottom: 16px; }
+.cover .subtitle { font-size: 14pt; opacity: .85; margin-bottom: 32px; }
+.cover .meta-block { margin-top: auto; font-size: 10pt; opacity: .7; }
+.cover .business-badge {
+  display: inline-block;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 13pt;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* ── KPI strip ──────────────────────────────────────── */
+.kpi-strip {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.kpi-card {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  background: var(--bg-alt);
+}
+.kpi-card .value {
+  font-size: 20pt;
+  font-weight: 700;
+  color: var(--brand);
+  line-height: 1.1;
+}
+.kpi-card .label { display: block; margin-top: 2px; }
+
+/* ── Section blocks ──────────────────────────────────── */
+.section { margin-bottom: 20px; }
+
+.findings-text, .reco-text, .context-text, .next-step-text {
+  line-height: 1.65;
+}
+.findings-text p, .reco-text p { margin-bottom: 4px; }
+
+/* ── Tables ─────────────────────────────────────────── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9.5pt;
+}
+thead tr {
+  background: var(--brand);
+  color: #fff;
+}
+thead th {
+  padding: 7px 10px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 8.5pt;
+  letter-spacing: .04em;
+}
+tbody tr { border-bottom: 1px solid var(--border); }
+tbody tr:nth-child(even) { background: var(--bg-alt); }
+tbody tr.highlight { background: #eff6ff; font-weight: 600; }
+tbody td { padding: 7px 10px; vertical-align: top; }
+
+/* priority badge */
+.badge {
+  display: inline-block;
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 8pt;
+  font-weight: 600;
+}
+.badge-high   { background: #fee2e2; color: var(--danger); }
+.badge-medium { background: #fef3c7; color: #92400e; }
+.badge-low    { background: #dcfce7; color: var(--ok); }
+
+/* ── Charts page ────────────────────────────────────── */
+.chart-box {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  background: var(--bg-alt);
+  text-align: center;
+}
+.chart-box img { width: 100%; height: auto; }
+.chart-box .chart-title { font-size: 9.5pt; font-weight: 600; margin-bottom: 8px; color: var(--brand); }
+
+/* ── Page footer ────────────────────────────────────── */
+.footer {
+  position: absolute;
+  bottom: 10mm;
+  left: 18mm;
+  right: 18mm;
+  display: flex;
+  justify-content: space-between;
+  font-size: 8pt;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  padding-top: 6px;
+}
+
+/* ── CTA box (page 6) ───────────────────────────────── */
+.cta-box {
+  margin-top: 24px;
+  border: 2px solid var(--accent);
+  border-radius: 10px;
+  padding: 20px 24px;
+  background: #eff6ff;
+}
+.cta-box h3 { color: var(--brand); font-size: 13pt; margin-bottom: 8px; }
+.cta-box ul { padding-left: 18px; line-height: 1.8; }

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Review Intelligence Audit — {{ business }}</title>
+  <link rel="stylesheet" href="{{ css_path }}" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════
+     PÁGINA 1 — PORTADA
+══════════════════════════════════════════════════ -->
+<div class="page cover">
+  <div>
+    <div class="business-badge">{{ business }}</div>
+    <h1>Review Intelligence<br>Audit</h1>
+    <p class="subtitle">Análisis de reseñas de clientes<br>Informe ejecutivo</p>
+  </div>
+  <div class="meta-block">
+    <p>Período analizado: {{ period }}</p>
+    <p>Fecha del informe: {{ date }}</p>
+    <p>Preparado por: Review Insights</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PÁGINA 2 — RESUMEN EJECUTIVO
+══════════════════════════════════════════════════ -->
+<div class="page">
+
+  <h2>Resumen ejecutivo</h2>
+  <hr class="divider" />
+
+  <!-- KPI strip -->
+  <div class="kpi-strip">
+    <div class="kpi-card">
+      <div class="value">{{ total_reviews }}</div>
+      <span class="label">reseñas analizadas</span>
+    </div>
+    <div class="kpi-card">
+      <div class="value">{{ avg_rating }} ★</div>
+      <span class="label">calificación promedio</span>
+    </div>
+    <div class="kpi-card">
+      <div class="value" style="color: var(--ok);">{{ pct_positive }}%</div>
+      <span class="label">menciones positivas</span>
+    </div>
+    <div class="kpi-card">
+      <div class="value" style="color: var(--danger);">{{ pct_negative }}%</div>
+      <span class="label">menciones negativas</span>
+    </div>
+  </div>
+
+  <!-- Contexto -->
+  <div class="section">
+    <h3>Contexto</h3>
+    <div class="context-text">{{ summary.context | markdown }}</div>
+  </div>
+
+  <!-- Hallazgos -->
+  <div class="section">
+    <h3>Principales hallazgos</h3>
+    <div class="findings-text">{{ summary.findings | markdown }}</div>
+  </div>
+
+  <!-- Recomendaciones -->
+  <div class="section">
+    <h3>Recomendaciones</h3>
+    <div class="reco-text">{{ summary.recommendations | markdown }}</div>
+  </div>
+
+  <!-- Próximo paso -->
+  <div class="section">
+    <h3>Próximo paso prioritario</h3>
+    <div class="next-step-text">{{ summary.next_step | markdown }}</div>
+  </div>
+
+  <div class="footer">
+    <span>{{ business }} — Review Intelligence Audit</span>
+    <span>Página 2</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PÁGINA 3 — CHARTS
+══════════════════════════════════════════════════ -->
+<div class="page">
+
+  <h2>Distribución de la experiencia</h2>
+  <hr class="divider" />
+
+  <div class="chart-box" style="margin-bottom: 16px;">
+    <div class="chart-title">Sentimiento de menciones</div>
+    <img src="{{ charts.pie }}" alt="Sentiment pie chart" />
+  </div>
+  <div class="chart-box">
+    <div class="chart-title">Temas más mencionados</div>
+    <img src="{{ charts.topics }}" alt="Top topics bar chart" />
+  </div>
+
+  <div class="footer">
+    <span>{{ business }} — Review Intelligence Audit</span>
+    <span>Página 3</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PÁGINA 4 — HALLAZGOS PRIORIZADOS
+══════════════════════════════════════════════════ -->
+<div class="page">
+
+  <h2>Hallazgos priorizados</h2>
+  <hr class="divider" />
+  <p class="muted" style="margin-bottom:12px;">
+    Todos los temas detectados, ordenados por prioridad (frecuencia × urgencia × impacto negativo).
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Tema</th>
+        <th>Título</th>
+        <th>Menciones</th>
+        <th>% Neg.</th>
+        <th>Prioridad</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in insights %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ row.main_topic }}</td>
+        <td>{{ row.title }}</td>
+        <td>{{ row.mention_count }}</td>
+        <td>{{ row.pct_negative }}%</td>
+        <td>
+          {% if row.priority_score >= 8 %}
+            <span class="badge badge-high">Alta</span>
+          {% elif row.priority_score >= 3 %}
+            <span class="badge badge-medium">Media</span>
+          {% else %}
+            <span class="badge badge-low">Baja</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <span>{{ business }} — Review Intelligence Audit</span>
+    <span>Página 4</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PÁGINA 5 — BENCHMARK VS. COMPETIDORES
+══════════════════════════════════════════════════ -->
+<div class="page">
+
+  <h2>Posición vs. competidores</h2>
+  <hr class="divider" />
+  {% if summary.competitive_position %}
+  <div style="margin-bottom: 16px;">{{ summary.competitive_position | markdown }}</div>
+  {% endif %}
+
+  <table>
+    <thead>
+      <tr>
+        <th>Negocio</th>
+        <th>Reseñas</th>
+        <th>Rating promedio</th>
+        <th>% Positivo</th>
+        <th>% Negativo</th>
+        <th>Urgencias altas</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in benchmark %}
+      <tr {% if row.business_name == business %}class="highlight"{% endif %}>
+        <td>{{ row.business_name }}{% if row.business_name == business %} ◀{% endif %}</td>
+        <td>{{ row.total_reviews }}</td>
+        <td>{{ row.avg_rating }} ★</td>
+        <td>{{ row.pct_positive }}%</td>
+        <td>{{ row.pct_negative }}%</td>
+        <td>{{ row.high_urgency_count }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <span>{{ business }} — Review Intelligence Audit</span>
+    <span>Página 5</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PÁGINA 6 — PLAN DE ACCIÓN + CTA
+══════════════════════════════════════════════════ -->
+<div class="page">
+
+  <h2>Plan de acción</h2>
+  <hr class="divider" />
+  <p class="muted" style="margin-bottom:12px;">
+    Recomendaciones concretas por tema, ordenadas por prioridad.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Tema</th>
+        <th>Acción recomendada</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in insights %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ row.main_topic }}</td>
+        <td>{{ row.recommendation }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="cta-box">
+    <h3>¿Qué sigue?</h3>
+    <p>Este informe es el punto de partida. Con el <strong>Paquete de Seguimiento</strong> podés:</p>
+    <ul>
+      <li>Recibir actualizaciones mensuales del análisis con nuevas reseñas</li>
+      <li>Trackear si las acciones tomadas movieron los números</li>
+      <li>Comparar tu evolución contra el mercado de forma continua</li>
+    </ul>
+    <p style="margin-top:12px;">
+      Contacto: <strong>joacoferrer00@gmail.com</strong>
+    </p>
+  </div>
+
+  <div class="footer">
+    <span>{{ business }} — Review Intelligence Audit</span>
+    <span>Página 6</span>
+  </div>
+</div>
+
+</body>
+</html>
