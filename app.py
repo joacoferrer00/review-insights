@@ -5,6 +5,7 @@ import io
 import streamlit as st
 
 from review_insights.reporting.dashboard import (
+    TOPIC_ES,
     chart_rating_benchmark,
     chart_sentiment_benchmark,
     chart_sentiment_pie,
@@ -157,11 +158,29 @@ with tab4:
         .sort_values("priority_score", ascending=False)
         .reset_index(drop=True)
     )
-    biz_insights.index += 1
 
     if "title" in biz_insights.columns:
-        cols_show = ["title", "description", "recommendation", "priority_score"]
-        rename = {"title": "Hallazgo", "description": "Descripción", "recommendation": "Recomendación", "priority_score": "Prioridad"}
+        for i, row in biz_insights.iterrows():
+            with st.container(border=True):
+                col_title, col_score = st.columns([5, 1])
+                with col_title:
+                    st.markdown(
+                        f'<span style="color:#4a90d9;font-size:1.05rem;font-weight:700">'
+                        f'{i + 1}. {row["title"]}</span>',
+                        unsafe_allow_html=True,
+                    )
+                    st.caption(TOPIC_ES.get(row["main_topic"], row["main_topic"]))
+                with col_score:
+                    st.markdown(
+                        f'<div style="text-align:center">'
+                        f'<div style="color:#c49a3c;font-size:1.6rem;font-weight:700;line-height:1.1">'
+                        f'{round(row["priority_score"], 1)}</div>'
+                        f'<div style="color:#c49a3c;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em">'
+                        f'Prioridad</div></div>',
+                        unsafe_allow_html=True,
+                    )
+                st.markdown(row["description"])
+                st.markdown(f"**→ Recomendación:** {row['recommendation']}")
     else:
         cols_show = ["main_topic", "mention_count", "pct_negative", "avg_urgency_score", "priority_score"]
         rename = {
@@ -171,14 +190,11 @@ with tab4:
             "avg_urgency_score": "Urgencia prom.",
             "priority_score": "Score prioridad",
         }
-
-    display = biz_insights[cols_show].rename(columns=rename)
-    if "% Negativo" in display.columns:
+        display = biz_insights[cols_show].rename(columns=rename)
         display["% Negativo"] = display["% Negativo"].apply(lambda x: f"{x:.0f}%")
-    if "Score prioridad" in display.columns:
         display["Score prioridad"] = display["Score prioridad"].round(1)
+        st.dataframe(display, use_container_width=True)
 
-    st.dataframe(display, use_container_width=True)
     st.caption("Score prioridad = menciones × urgencia × % negativo. Cuanto más alto, más impacto tiene resolver ese issue.")
 
 # ── Tab 5: Datos / Descarga ───────────────────────────────────────────────────
