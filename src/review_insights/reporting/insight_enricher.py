@@ -13,8 +13,6 @@ from review_insights.llm.base import LLMProvider, LLMRequest
 
 logger = logging.getLogger(__name__)
 
-_PROMPT_PATH = Path(__file__).resolve().parents[3] / "prompts" / "insight_enrichment_prompt.md"
-_OUTPUT_PATH = Path(__file__).resolve().parents[3] / "data" / "5_enriched" / "insights_enriched.csv"
 _TOP_QUOTES = 5
 _MAX_RETRIES = 3
 
@@ -41,17 +39,19 @@ def enrich_insights(
     insights_df: pd.DataFrame,
     classified_df: pd.DataFrame,
     provider: LLMProvider,
+    prompt_path: Path,
+    output_path: Path,
 ) -> pd.DataFrame:
     """Enrich each row in insights_df with title, description, evidence, recommendation.
 
-    Idempotent: skips if insights_enriched.csv already exists.
+    Idempotent: skips if output_path already exists.
     Rows without available quotes get null enrichment fields and are not retried.
     """
-    if _OUTPUT_PATH.exists():
+    if output_path.exists():
         logger.info("insights_enriched.csv already exists — skipping enrichment")
-        return pd.read_csv(_OUTPUT_PATH)
+        return pd.read_csv(output_path)
 
-    system_prompt = _PROMPT_PATH.read_text(encoding="utf-8")
+    system_prompt = prompt_path.read_text(encoding="utf-8")
     results = []
     total = len(insights_df)
 
@@ -67,7 +67,8 @@ def enrich_insights(
         logger.info("Enriched %d/%d — %s / %s", i, total, row["business_name"], row["main_topic"])
 
     enriched_df = pd.DataFrame(results)
-    enriched_df.to_csv(_OUTPUT_PATH, index=False)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    enriched_df.to_csv(output_path, index=False)
     logger.info("insights_enriched.csv written — %d rows", len(enriched_df))
     return enriched_df
 

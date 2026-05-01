@@ -1,0 +1,31 @@
+business_name,main_topic,mention_count,pct_negative,avg_urgency_score,actionable_count,priority_score
+El Mesón de Gauss,Food Quality,22,45.5,1.27,22,12.71
+El Mesón de Gauss,Service Speed,7,85.7,1.86,7,11.16
+IDA Restaurant Bar,Staff Attitude,32,25.0,1.38,32,11.04
+IDA Restaurant Bar,Service Speed,6,83.3,1.83,6,9.15
+El Mesón de Gauss,Staff Attitude,12,41.7,1.67,12,8.36
+IDA Restaurant Bar,Price / Value,5,80.0,1.8,5,7.2
+IDA Restaurant Bar,Menu & Options,5,100.0,1.2,5,6.0
+Vittorio Ristorante,Service Speed,4,75.0,2.0,4,6.0
+El Mesón de Gauss,Price / Value,8,50.0,1.25,7,5.0
+IDA Restaurant Bar,Food Quality,37,10.8,1.14,37,4.56
+El Mesón de Gauss,Menu & Options,3,100.0,1.33,3,3.99
+Mitica,Food Quality,28,10.7,1.07,27,3.21
+El Mesón de Gauss,Hygiene & Cleanliness,1,100.0,3.0,True,3.0
+Mitica,Staff Attitude,29,6.9,1.03,29,2.06
+Mitica,Service Speed,1,100.0,2.0,True,2.0
+Mitica,Price / Value,2,100.0,1.0,2,2.0
+Mitica,Booking & Reservations,1,100.0,2.0,True,2.0
+Mitica,Menu & Options,3,66.7,1.0,3,2.0
+Vittorio Ristorante,Overall Experience,5,20.0,1.2,4,1.2
+Vittorio Ristorante,Staff Attitude,18,5.6,1.11,18,1.12
+Vittorio Ristorante,Food Quality,21,4.8,1.05,20,1.06
+Mitica,Ambiance,14,7.1,1.07,13,1.06
+El Mesón de Gauss,Ambiance,9,11.1,1.0,8,1.0
+IDA Restaurant Bar,Ambiance,23,4.3,1.0,22,0.99
+IDA Restaurant Bar,Overall Experience,8,0.0,1.0,4,0.0
+Mitica,Overall Experience,3,0.0,1.0,2,0.0
+Vittorio Ristorante,Menu & Options,3,0.0,1.0,3,0.0
+Vittorio Ristorante,Booking & Reservations,1,0.0,1.0,False,0.0
+Vittorio Ristorante,Ambiance,9,0.0,1.0,9,0.0
+Vittorio Ristorante,Price / Value,3,0.0,1.0,3,0.0

@@ -6,7 +6,7 @@ rating-only reviews produce one row with null classification fields.
 
 Public API
 ----------
-    classify_reviews(df, provider) -> pd.DataFrame
+    classify_reviews(df, provider, prompt_path, topics) -> pd.DataFrame
 """
 
 import logging
@@ -23,7 +23,6 @@ from .schemas import BatchClassificationResult, ClassificationResult
 
 logger = logging.getLogger(__name__)
 
-_PROMPT_PATH = Path(__file__).resolve().parents[3] / "prompts" / "classify_review.md"
 _MAX_RETRIES = 3
 _BATCH_SIZE = 5
 
@@ -43,7 +42,12 @@ _CLASSIFICATION_COLS = [
 ]
 
 
-def classify_reviews(df: pd.DataFrame, provider: LLMProvider) -> pd.DataFrame:
+def classify_reviews(
+    df: pd.DataFrame,
+    provider: LLMProvider,
+    prompt_path: Path,
+    topics: frozenset[str],
+) -> pd.DataFrame:
     """Classify all reviews with text using an LLM provider.
 
     For each review where has_text=True and not yet classified, calls the LLM
@@ -60,6 +64,10 @@ def classify_reviews(df: pd.DataFrame, provider: LLMProvider) -> pd.DataFrame:
         Cleaned reviews from ``cleaning.clean_reviews``.
     provider : LLMProvider
         Configured LLM provider instance (e.g. GeminiProvider).
+    prompt_path : Path
+        Path to the classification prompt template (contains ``{{topics}}``).
+    topics : frozenset[str]
+        Valid topic names loaded from the industry taxonomy.
 
     Returns
     -------
@@ -70,7 +78,8 @@ def classify_reviews(df: pd.DataFrame, provider: LLMProvider) -> pd.DataFrame:
         urgency, is_actionable, classification_confidence, classified_at,
         model_used.
     """
-    system_prompt = _PROMPT_PATH.read_text(encoding="utf-8")
+    topic_list = "\n".join(f"- {t}" for t in sorted(topics))
+    system_prompt = prompt_path.read_text(encoding="utf-8").replace("{{topics}}", topic_list)
     df = df.copy()
 
     for col in _CLASSIFICATION_COLS:
