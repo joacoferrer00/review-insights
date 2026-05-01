@@ -56,3 +56,21 @@ Use "Overall Experience" only when the review is genuinely holistic with no spec
   ]
 }
 ```
+
+## Batch mode
+
+When the input contains multiple reviews separated by `--- REVIEW N ---` markers, classify each review independently and return a single JSON object:
+
+```json
+{
+  "results": [
+    { "review_idx": 1, "mentions": [...] },
+    { "review_idx": 2, "mentions": [...] }
+  ]
+}
+```
+
+- Include one entry per review, in the same order received.
+- `review_idx` must match the number in the `--- REVIEW N ---` marker.
+- Each `mentions` array follows all rules above (same topic list, same constraints).
+- Return ONLY valid JSON. No prose, no markdown fences.
