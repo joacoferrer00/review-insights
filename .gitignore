@@ -70,7 +70,19 @@ data/processed/*_v1.csv
 # Sample data IS versioned (it's anonymized / public)
 # data/sample/  ← do NOT ignore
 
-# --- Outputs (real client deliverables) ---
+# --- Client data ---
+# 0_input: raw Apify JSONs (large, no agregar al repo)
+clients/*/data/0_input/
+# 1_raw y 2_clean: intermedios, se regeneran
+clients/*/data/1_raw/
+clients/*/data/2_clean/
+# 3_classified, 4_aggregated, 5_enriched: commiteados (Streamlit Cloud los necesita)
+
+# --- Client outputs ---
+clients/*/outputs/reports/*.pdf
+clients/*/outputs/exports/*
+
+# --- Outputs legacy (pre-refactor) ---
 outputs/dashboards/*
 outputs/reports/*
 outputs/exports/*
