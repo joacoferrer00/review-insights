@@ -1,0 +1,19 @@
+slug: ida
+business_name: IDA Restaurant Bar
+industry: restaurants
+target: IDA Restaurant Bar
+
+places:
+  - business_name: IDA Restaurant Bar
+    url: "https://maps.google.com/?cid=PLACEHOLDER"
+    role: target
+  - business_name: Vittorio Ristorante
+    url: "https://maps.google.com/?cid=PLACEHOLDER"
+    role: competitor
+  - business_name: El Mesón de Gauss
+    url: "https://maps.google.com/?cid=PLACEHOLDER"
+    role: competitor
+
+branding:
+  primary_color: "#1a1a2e"
+  logo: null

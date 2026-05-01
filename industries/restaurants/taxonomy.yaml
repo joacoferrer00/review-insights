@@ -1,0 +1,30 @@
+topics:
+  - name: Food Quality
+    description: Taste, temperature, presentation, and freshness of dishes
+
+  - name: Service Speed
+    description: Wait times for seating, ordering, and receiving food
+
+  - name: Staff Attitude
+    description: Friendliness, professionalism, and attentiveness of staff
+
+  - name: Price / Value
+    description: Perceived value for money relative to portion size and quality
+
+  - name: Ambiance
+    description: Atmosphere, decor, noise level, and overall setting
+
+  - name: Hygiene & Cleanliness
+    description: Cleanliness of tables, restrooms, kitchen visibility, and utensils
+
+  - name: Menu & Options
+    description: Variety, dietary options, seasonal offerings, and menu clarity
+
+  - name: Booking & Reservations
+    description: Ease of making reservations, wait lists, and table management
+
+  - name: Delivery & Takeaway
+    description: Packaging, delivery time, and order accuracy for off-premise orders
+
+  - name: Overall Experience
+    description: Holistic impression when no single area dominates the review

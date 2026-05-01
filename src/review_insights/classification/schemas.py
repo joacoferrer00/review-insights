@@ -1,28 +1,39 @@
+from __future__ import annotations
+
+from pathlib import Path
 from typing import Literal
 
+import yaml
 from pydantic import BaseModel, Field, field_validator
 
-MAIN_TOPICS = Literal[
-    "Food Quality",
-    "Service Speed",
-    "Staff Attitude",
-    "Price / Value",
-    "Ambiance",
-    "Hygiene & Cleanliness",
-    "Menu & Options",
-    "Booking & Reservations",
-    "Delivery & Takeaway",
-    "Overall Experience",
-]
+# Populated at pipeline startup via set_taxonomy(); validated in TopicMention.
+_VALID_TOPICS: frozenset[str] = frozenset()
+
+
+def load_taxonomy(path: Path) -> frozenset[str]:
+    raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+    return frozenset(t["name"] for t in raw["topics"])
+
+
+def set_taxonomy(topics: frozenset[str]) -> None:
+    global _VALID_TOPICS
+    _VALID_TOPICS = topics
 
 
 class TopicMention(BaseModel):
-    main_topic: MAIN_TOPICS
+    main_topic: str
     sentiment: Literal["positive", "neutral", "negative"]
     urgency: Literal["low", "medium", "high"]
     is_actionable: bool
     text_reference: str
     classification_confidence: float = Field(ge=0.0, le=1.0)
+
+    @field_validator("main_topic")
+    @classmethod
+    def validate_topic(cls, v: str) -> str:
+        if _VALID_TOPICS and v not in _VALID_TOPICS:
+            raise ValueError(f"Unknown topic: {v!r}. Valid: {sorted(_VALID_TOPICS)}")
+        return v
 
 
 def _dedupe_and_cap_mentions(v: list[TopicMention]) -> list[TopicMention]:
@@ -43,17 +54,6 @@ class ClassificationResult(BaseModel):
     @field_validator("mentions", mode="after")
     @classmethod
     def dedupe_and_cap(cls, v: list[TopicMention]) -> list[TopicMention]:
-        """Keep at most 3 mentions, one per distinct main_topic.
-
-        The prompt already instructs the model to return ≤3 distinct topics,
-        so violations should be rare. When they happen we fix them here
-        silently — no ValidationError, no retry — because a retry would cost
-        tokens and the truncated output is still valid and useful.
-
-        Deduplication keeps the first occurrence of each topic (the model tends
-        to put the most relevant mention first). Capping happens as we iterate
-        so we never process more items than needed.
-        """
         return _dedupe_and_cap_mentions(v)
 
 
