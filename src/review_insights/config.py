@@ -117,3 +117,9 @@ def load_client_config(slug: str) -> ClientConfig:
 def load_taxonomy(taxonomy_path: Path) -> frozenset[str]:
     raw = yaml.safe_load(taxonomy_path.read_text(encoding="utf-8"))
     return frozenset(t["name"] for t in raw["topics"])
+
+
+def load_topic_labels(taxonomy_path: Path) -> dict[str, str]:
+    """Return {topic_name: label_es} for dashboard display. Falls back to name if label_es absent."""
+    raw = yaml.safe_load(taxonomy_path.read_text(encoding="utf-8"))
+    return {t["name"]: t.get("label_es", t["name"]) for t in raw["topics"]}

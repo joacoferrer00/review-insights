@@ -61,13 +61,25 @@ python run_pipeline.py --client ida --from-date 2025-01-01 --to-date 2025-06-01
 python run_pipeline.py --client ida --limit 20 --skip-fetch
 ```
 
-Each pipeline step is idempotent — if the output file already exists, the step is skipped. Delete the relevant file to force a re-run from that step.
+The pipeline is incrementally idempotent:
+
+| Step | Behavior |
+|---|---|
+| 1 — ingestion | Merges new JSONs into raw.csv by `review_id`. Re-running with the same data adds 0 rows. |
+| 2 — cleaning | Detects new `review_id`s not yet in reviews_clean.csv, cleans only those, appends. |
+| 3 — classification | Skips already-classified `review_id`s. |
+| 4 — aggregation | Always recomputes (~50ms, pure pandas, no LLM). |
+| 5 — enrichment | Skips already-enriched `(business, topic)` pairs. |
 
 ## Adding a new client
 
 1. Create `clients/<slug>/config.yaml` — see `clients/ida/config.yaml` as reference.
-2. Drop Apify JSON exports into `clients/<slug>/data/0_input/`.
-3. Run `python run_pipeline.py --client <slug> --skip-fetch`.
+2. Run `python run_pipeline.py --client <slug>` to fetch reviews from Apify and run the full pipeline.
+
+   If you have existing Apify JSON exports, drop them into `clients/<slug>/data/0_input/` and use `--skip-fetch` to skip the fetch step:
+   ```bash
+   python run_pipeline.py --client <slug> --skip-fetch
+   ```
 
 No code changes required.
 

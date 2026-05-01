@@ -1,11 +1,15 @@
 """Review Intelligence Dashboard — Streamlit entry point."""
 
 import io
+import sys
+from pathlib import Path
 
 import streamlit as st
 
+sys.path.insert(0, str(Path(__file__).parent / "src"))
+
+from review_insights.config import load_client_config, load_topic_labels
 from review_insights.reporting.dashboard import (
-    TOPIC_ES,
     chart_rating_benchmark,
     chart_sentiment_benchmark,
     chart_sentiment_pie,
@@ -58,10 +62,29 @@ button[data-baseweb="tab"] {
 </style>
 """, unsafe_allow_html=True)
 
+# ── Client config ────────────────────────────────────────────────────────────
+
+client_slug = st.query_params.get("client")
+if not client_slug:
+    st.error("Missing **?client=** parameter. Example: `?client=ida`")
+    st.stop()
+
+try:
+    cfg = load_client_config(client_slug)
+except FileNotFoundError as e:
+    st.error(str(e))
+    st.stop()
+
+topic_labels = load_topic_labels(cfg.taxonomy_path)
+
 # ── Data ────────────────────────────────────────────────────────────────────
 
 def get_data():
-    return load_aggregated(), load_insights(), load_classified()
+    return (
+        load_aggregated(cfg.aggregated_path),
+        load_insights(cfg.enriched_path, cfg.insights_path, topic_labels),
+        load_classified(cfg.classified_path, topic_labels),
+    )
 
 agg, insights, classified = get_data()
 businesses = agg.business_name.tolist()
@@ -70,9 +93,9 @@ businesses = agg.business_name.tolist()
 
 with st.sidebar:
     st.title("📊 Review Intelligence")
-    st.caption("Análisis de reseñas para restaurantes")
+    st.caption(f"Análisis de reseñas — {cfg.business_name}")
     st.divider()
-    default_idx = businesses.index("IDA Restaurant Bar") if "IDA Restaurant Bar" in businesses else 0
+    default_idx = businesses.index(cfg.target) if cfg.target in businesses else 0
     selected = st.selectbox("Negocio analizado", businesses, index=default_idx)
     st.divider()
     last_date = classified["date_parsed"].dropna().max()
@@ -169,7 +192,7 @@ with tab4:
                         f'{i + 1}. {row["title"]}</span>',
                         unsafe_allow_html=True,
                     )
-                    st.caption(TOPIC_ES.get(row["main_topic"], row["main_topic"]))
+                    st.caption(row["main_topic"])
                 with col_score:
                     st.markdown(
                         f'<div style="text-align:center">'

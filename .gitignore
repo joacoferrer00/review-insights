@@ -99,6 +99,7 @@ logs/
 
 # --- Internal project docs (not for public repo) ---
 CLAUDE.md
+bug.md
 DECISIONS.md
 ROADMAP.md
 PROJECT_BRIEF.md

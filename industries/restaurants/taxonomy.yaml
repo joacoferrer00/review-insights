@@ -1,30 +1,40 @@
 topics:
   - name: Food Quality
     description: Taste, temperature, presentation, and freshness of dishes
+    label_es: Calidad de comida
 
   - name: Service Speed
     description: Wait times for seating, ordering, and receiving food
+    label_es: Velocidad del servicio
 
   - name: Staff Attitude
     description: Friendliness, professionalism, and attentiveness of staff
+    label_es: Actitud del personal
 
   - name: Price / Value
     description: Perceived value for money relative to portion size and quality
+    label_es: Precio / Valor
 
   - name: Ambiance
     description: Atmosphere, decor, noise level, and overall setting
+    label_es: Ambiente
 
   - name: Hygiene & Cleanliness
     description: Cleanliness of tables, restrooms, kitchen visibility, and utensils
+    label_es: Higiene y limpieza
 
   - name: Menu & Options
     description: Variety, dietary options, seasonal offerings, and menu clarity
+    label_es: Menú y opciones
 
   - name: Booking & Reservations
     description: Ease of making reservations, wait lists, and table management
+    label_es: Reservas
 
   - name: Delivery & Takeaway
     description: Packaging, delivery time, and order accuracy for off-premise orders
+    label_es: Delivery / Para llevar
 
   - name: Overall Experience
     description: Holistic impression when no single area dominates the review
+    label_es: Experiencia general

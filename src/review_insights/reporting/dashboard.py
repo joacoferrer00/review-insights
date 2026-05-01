@@ -6,11 +6,6 @@ import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 
-_ROOT = Path(__file__).parent.parent.parent.parent / "data"
-_DIR_CLASSIFIED = _ROOT / "3_classified"
-_DIR_AGGREGATED = _ROOT / "4_aggregated"
-_DIR_ENRICHED = _ROOT / "5_enriched"
-
 # ── Color palette ────────────────────────────────────────────────────────────
 
 SENTIMENT_COLORS = {"Positivo": "#008450", "Neutral": "#7a8499", "Negativo": "#B81D13"}
@@ -18,45 +13,29 @@ URGENCY_COLORS = {"Alta": "#B81D13", "Media": "#c49a3c", "Baja": "#008450"}
 HIGHLIGHT_COLOR = "#4a90d9"
 HEATMAP_SCALE = ["#131929", "#1a2f52", "#25467a", "#3666a8", "#4a90d9"]
 
-# ── Translation maps ─────────────────────────────────────────────────────────
-
-TOPIC_ES = {
-    "Food Quality": "Calidad de comida",
-    "Service Speed": "Velocidad del servicio",
-    "Staff Attitude": "Actitud del personal",
-    "Price / Value": "Precio / Valor",
-    "Ambiance": "Ambiente",
-    "Hygiene & Cleanliness": "Higiene y limpieza",
-    "Menu & Options": "Menú y opciones",
-    "Booking & Reservations": "Reservas",
-    "Delivery & Takeaway": "Delivery / Para llevar",
-    "Overall Experience": "Experiencia general",
-}
-
 SENTIMENT_ES = {"positive": "Positivo", "neutral": "Neutral", "negative": "Negativo"}
 URGENCY_ES = {"high": "Alta", "medium": "Media", "low": "Baja"}
 
 # ── Data loaders ─────────────────────────────────────────────────────────────
 
 
-def load_aggregated() -> pd.DataFrame:
-    return pd.read_csv(_DIR_AGGREGATED / "aggregated.csv")
+def load_aggregated(path: Path) -> pd.DataFrame:
+    return pd.read_csv(path)
 
 
-def load_insights() -> pd.DataFrame:
-    enriched = _DIR_ENRICHED / "insights_enriched.csv"
-    path = enriched if enriched.exists() else _DIR_AGGREGATED / "insights.csv"
+def load_insights(enriched_path: Path, base_path: Path, topic_labels: dict[str, str]) -> pd.DataFrame:
+    path = enriched_path if enriched_path.exists() else base_path
     df = pd.read_csv(path)
     if "main_topic" in df.columns:
-        df["main_topic"] = df["main_topic"].map(TOPIC_ES).fillna(df["main_topic"])
+        df["main_topic"] = df["main_topic"].map(topic_labels).fillna(df["main_topic"])
     return df
 
 
-def load_classified() -> pd.DataFrame:
-    df = pd.read_csv(_DIR_CLASSIFIED / "reviews_classified.csv")
+def load_classified(path: Path, topic_labels: dict[str, str]) -> pd.DataFrame:
+    df = pd.read_csv(path)
     df["date_parsed"] = pd.to_datetime(df["date_parsed"], errors="coerce")
     df["is_actionable"] = df["is_actionable"].astype(str).str.lower().map({"true": True, "false": False})
-    df["main_topic"] = df["main_topic"].map(TOPIC_ES).fillna(df["main_topic"])
+    df["main_topic"] = df["main_topic"].map(topic_labels).fillna(df["main_topic"])
     df["sentiment"] = df["sentiment"].map(SENTIMENT_ES).fillna(df["sentiment"])
     df["urgency"] = df["urgency"].map(URGENCY_ES).fillna(df["urgency"])
     return df

@@ -78,27 +78,49 @@ def main() -> None:
         raise NotImplementedError("Apify fetch not wired yet — use --skip-fetch to run from existing JSONs")
 
     # — Step 1: ingestion —
-    if cfg.raw_path.exists():
-        logger.info("Step 1/5 — ingestion SKIPPED (raw.csv exists)")
-        raw_df = pd.read_csv(cfg.raw_path)
-    else:
-        json_files = sorted(cfg.input_dir.glob("*.json"))
-        if not json_files:
+    json_files = sorted(cfg.input_dir.glob("*.json"))
+    if not json_files:
+        if cfg.raw_path.exists():
+            logger.info("Step 1/5 — ingestion SKIPPED (no JSONs in input_dir, using existing raw.csv)")
+            raw_df = pd.read_csv(cfg.raw_path)
+        else:
             raise FileNotFoundError(
                 f"No JSON files found in {cfg.input_dir}. "
                 "Copy your Apify exports there or run without --skip-fetch."
             )
+    else:
         logger.info("Step 1/5 — ingestion (%d JSON files)", len(json_files))
         t = time.time()
-        raw_df = load_reviews(json_files)
+        new_df = load_reviews(json_files)
+        if cfg.raw_path.exists():
+            existing = pd.read_csv(cfg.raw_path)
+            raw_df = pd.concat([existing, new_df], ignore_index=True)
+            raw_df = raw_df.drop_duplicates(subset="review_id", keep="first")
+            n_new = len(raw_df) - len(existing)
+            logger.info("ingestion — %d new reviews merged (total: %d)", n_new, len(raw_df))
+        else:
+            raw_df = new_df
+            logger.info("ingestion — %d rows loaded", len(raw_df))
         cfg.raw_path.parent.mkdir(parents=True, exist_ok=True)
         raw_df.to_csv(cfg.raw_path, index=False)
-        logger.info("ingestion done (%.1fs) — %d rows → raw.csv", time.time() - t, len(raw_df))
+        logger.info("ingestion done (%.1fs)", time.time() - t)
 
     # — Step 2: cleaning —
     if cfg.clean_path.exists():
-        logger.info("Step 2/5 — cleaning SKIPPED (reviews_clean.csv exists)")
-        clean_df = pd.read_csv(cfg.clean_path)
+        existing_clean = pd.read_csv(cfg.clean_path)
+        existing_ids = set(existing_clean["review_id"])
+        new_raw = raw_df[~raw_df["review_id"].isin(existing_ids)]
+        if new_raw.empty:
+            logger.info("Step 2/5 — cleaning SKIPPED (no new reviews)")
+            clean_df = existing_clean
+        else:
+            logger.info("Step 2/5 — cleaning %d new reviews", len(new_raw))
+            t = time.time()
+            new_clean = clean_reviews(new_raw)
+            clean_df = pd.concat([existing_clean, new_clean], ignore_index=True)
+            cfg.clean_path.parent.mkdir(parents=True, exist_ok=True)
+            clean_df.to_csv(cfg.clean_path, index=False)
+            logger.info("cleaning done (%.1fs) — %d rows total", time.time() - t, len(clean_df))
     else:
         logger.info("Step 2/5 — cleaning")
         t = time.time()
