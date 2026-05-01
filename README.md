@@ -33,11 +33,43 @@ cd review-insights
 pip install -e .
 
 cp .env.example .env
-# Fill in GEMINI_API_KEY
+# Fill in LLM_API_KEY
 
-python run_pipeline.py      # runs the full pipeline
-streamlit run app.py        # launches the dashboard
+# Run the pipeline using existing data (no Apify call)
+python run_pipeline.py --client ida --skip-fetch
+
+# Launch the dashboard
+streamlit run app.py
 ```
+
+## Running the pipeline
+
+```bash
+# Use existing JSON exports (no Apify call) — most common during development
+python run_pipeline.py --client ida --skip-fetch
+
+# Fetch new reviews from Apify, then run pipeline (requires Apify token in .env)
+python run_pipeline.py --client ida
+
+# Fetch only older reviews not yet in the dataset (backfill)
+python run_pipeline.py --client ida --backfill
+
+# Fetch reviews within a specific date range
+python run_pipeline.py --client ida --from-date 2025-01-01 --to-date 2025-06-01
+
+# Cap reviews per place — useful for quick tests (Apify fetch only)
+python run_pipeline.py --client ida --limit 20 --skip-fetch
+```
+
+Each pipeline step is idempotent — if the output file already exists, the step is skipped. Delete the relevant file to force a re-run from that step.
+
+## Adding a new client
+
+1. Create `clients/<slug>/config.yaml` — see `clients/ida/config.yaml` as reference.
+2. Drop Apify JSON exports into `clients/<slug>/data/0_input/`.
+3. Run `python run_pipeline.py --client <slug> --skip-fetch`.
+
+No code changes required.
 
 ## Repo layout
 
@@ -46,8 +78,10 @@ streamlit run app.py        # launches the dashboard
 | `app.py` | Streamlit dashboard entry point |
 | `run_pipeline.py` | End-to-end pipeline runner |
 | `src/review_insights/` | Package: ingestion, cleaning, classification, aggregation, reporting |
-| `prompts/` | Versioned LLM prompts |
-| `data/{0_input..5_enriched}/` | Pipeline stages: input JSONs → raw → clean → classified → aggregated → enriched |
+| `clients/<slug>/config.yaml` | Per-client config: places, roles, branding |
+| `clients/<slug>/data/` | Pipeline outputs for that client (gitignored except processed CSVs) |
+| `industries/<industry>/taxonomy.yaml` | Topic taxonomy loaded at runtime |
+| `industries/<industry>/prompts/` | LLM prompts parametrized by industry |
 
 ## License
 
