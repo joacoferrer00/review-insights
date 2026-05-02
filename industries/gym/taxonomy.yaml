@@ -1,0 +1,40 @@
+topics:
+  - name: Equipment & Machines
+    description: Quality, quantity, maintenance, and availability of cardio and strength machines
+    label_es: Equipamiento y máquinas
+
+  - name: Cleanliness & Hygiene
+    description: Cleanliness of equipment, floors, changing rooms, and bathrooms
+    label_es: Limpieza e higiene
+
+  - name: Staff & Trainers
+    description: Professionalism, knowledge, and attitude of reception staff and personal trainers
+    label_es: Personal y entrenadores
+
+  - name: Group Classes
+    description: Quality, variety, schedules, and instructor quality for group fitness classes
+    label_es: Clases grupales
+
+  - name: Price & Membership
+    description: Monthly fees, contract terms, promotions, and perceived value for money
+    label_es: Precio / Membresía
+
+  - name: Crowd & Availability
+    description: Overcrowding, machine wait times, and peak-hour management
+    label_es: Concurrencia y disponibilidad
+
+  - name: Locker Rooms & Amenities
+    description: Showers, lockers, towels, sauna, pool, and changing room condition
+    label_es: Vestuarios y amenities
+
+  - name: Location & Access
+    description: Parking, public transport access, and opening hours
+    label_es: Ubicación y acceso
+
+  - name: App & Booking
+    description: Class booking app, digital check-in, and online account management
+    label_es: App y reservas
+
+  - name: Overall Experience
+    description: Holistic impression when no single area dominates the review
+    label_es: Experiencia general

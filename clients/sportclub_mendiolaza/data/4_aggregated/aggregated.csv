@@ -1,0 +1,4 @@
+business_name,total_reviews,reviews_with_text,avg_rating,pct_positive,pct_neutral,pct_negative,top_topic_1,top_topic_2,top_topic_3,high_urgency_count,actionable_count
+SportClub - Mendiolaza,94,56,3.5,40.0,1.9,58.1,Staff & Trainers,Equipment & Machines,Crowd & Availability,20,96
+SportClub Gauss,72,37,3.8,44.8,1.7,53.4,Equipment & Machines,Staff & Trainers,Overall Experience,16,52
+Zoom Fitness Center (sede Villa Allende),100,56,4.2,55.0,4.0,41.0,Staff & Trainers,Equipment & Machines,Overall Experience,6,92

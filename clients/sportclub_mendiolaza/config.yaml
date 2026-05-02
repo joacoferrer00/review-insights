@@ -1,0 +1,19 @@
+slug: sportclub_mendiolaza
+business_name: SportClub - Mendiolaza
+industry: gym
+target: SportClub - Mendiolaza
+
+places:
+  - business_name: SportClub - Mendiolaza
+    url: "https://www.google.com/maps/place/sportclub/@-31.2586419,-64.2955889,17z/data=!3m1!4b1!4m6!3m5!1s0x94328300201726fb:0x6ece96acd7ad850c!8m2!3d-31.2586465!4d-64.293014!16s%2Fg%2F11vpzhbw1z?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D"
+    role: target
+  - business_name: SportClub Gauss
+    url: "https://www.google.com/maps/place/SportClub+Gauss/@-31.3558488,-64.2533663,17z/data=!3m1!4b1!4m6!3m5!1s0x94329f4de635baa3:0x9d937793ee92113e!8m2!3d-31.3558534!4d-64.2507914!16s%2Fg%2F11t6w2_mzp?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D"
+    role: competitor
+  - business_name: Zoom Fitness Center (sede Villa Allende)
+    url: "https://www.google.com/maps/place/Zoom+Fitness+Center+(sede+Villa+Allende)/@-31.2966852,-64.2938189,17z/data=!3m1!4b1!4m6!3m5!1s0x94329d92790c24e1:0x17d779ee5660544a!8m2!3d-31.2966899!4d-64.288948!16s%2Fg%2F11r9jh68xx?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D"
+    role: competitor
+
+branding:
+  primary_color: "#360b12"
+  logo: null
