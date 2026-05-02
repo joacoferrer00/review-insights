@@ -1,5 +1,0 @@
-business_name,total_reviews,reviews_with_text,avg_rating,pct_positive,pct_neutral,pct_negative,top_topic_1,top_topic_2,top_topic_3,high_urgency_count,actionable_count
-El Mesón de Gauss,50,30,3.6,50.0,1.6,48.4,Food Quality,Staff Attitude,Ambiance,5,60
-IDA Restaurant Bar,100,53,4.4,75.9,0.9,23.3,Food Quality,Staff Attitude,Ambiance,6,111
-Mitica,50,40,4.6,84.0,1.2,14.8,Staff Attitude,Food Quality,Ambiance,0,78
-Vittorio Ristorante,50,33,4.6,90.6,0.0,9.4,Food Quality,Staff Attitude,Ambiance,2,61
