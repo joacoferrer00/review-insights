@@ -52,7 +52,6 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--limit", type=int, default=None, help="Max reviews per place (Apify only)")
     parser.add_argument("--from-date", default=None, help="Fetch reviews from this date (YYYY-MM-DD)")
     parser.add_argument("--to-date", default=None, help="Fetch reviews up to this date (YYYY-MM-DD)")
-    parser.add_argument("--backfill", action="store_true", help="Fetch older reviews (backward from min date in raw.csv)")
     parser.add_argument("--no-date-filter", action="store_true", help="Fetch all reviews with no date filter")
     return parser.parse_args()
 
@@ -91,10 +90,6 @@ def main() -> None:
             logger.info("Step 0/6 — fetch (Apify) — date range: %s → %s", start_date or "any", end_date or "any")
         elif args.no_date_filter or not cfg.raw_path.exists():
             logger.info("Step 0/6 — fetch (Apify) — no date filter")
-        elif args.backfill:
-            existing_dates = pd.read_csv(cfg.raw_path, usecols=["date"])["date"]
-            end_date = str(existing_dates.min())[:10]
-            logger.info("Step 0/6 — fetch (Apify) — backfill until %s", end_date)
         else:
             existing_dates = pd.read_csv(cfg.raw_path, usecols=["date"])["date"]
             start_date = str(existing_dates.max())[:10]
