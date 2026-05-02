@@ -1,0 +1,5 @@
+business_name,total_reviews,reviews_with_text,avg_rating,pct_positive,pct_neutral,pct_negative,top_topic_1,top_topic_2,top_topic_3,high_urgency_count,actionable_count
+IDA Restaurant Bar,200,108,4.5,75.9,3.2,20.9,Food Quality,Staff Attitude,Ambiance,9,218
+Mitica,200,144,4.4,82.4,2.9,14.7,Food Quality,Staff Attitude,Ambiance,8,278
+The Meson of Gauss,200,107,3.8,57.8,3.0,39.2,Food Quality,Staff Attitude,Ambiance,32,224
+Vittorio Ristorante,200,118,4.5,83.5,2.7,13.8,Food Quality,Staff Attitude,Ambiance,14,212

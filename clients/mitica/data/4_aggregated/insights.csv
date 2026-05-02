@@ -1,0 +1,38 @@
+business_name,main_topic,mention_count,pct_negative,avg_urgency_score,actionable_count,priority_score
+The Meson of Gauss,Food Quality,67,40.3,1.48,65,39.96
+The Meson of Gauss,Service Speed,24,75.0,1.83,24,32.94
+The Meson of Gauss,Staff Attitude,54,33.3,1.56,52,28.05
+IDA Restaurant Bar,Service Speed,14,64.3,1.71,14,15.39
+IDA Restaurant Bar,Staff Attitude,54,22.2,1.2,54,14.39
+The Meson of Gauss,Price / Value,23,47.8,1.04,22,11.43
+IDA Restaurant Bar,Menu & Options,12,75.0,1.25,12,11.25
+Vittorio Ristorante,Service Speed,15,46.7,1.6,15,11.21
+Mitica,Staff Attitude,80,11.2,1.18,80,10.57
+Mitica,Service Speed,12,58.3,1.5,12,10.49
+IDA Restaurant Bar,Food Quality,68,11.8,1.15,68,9.23
+Vittorio Ristorante,Ambiance,30,26.7,1.13,29,9.05
+Mitica,Menu & Options,11,54.5,1.45,11,8.69
+Vittorio Ristorante,Food Quality,68,10.3,1.18,66,8.26
+Mitica,Booking & Reservations,3,100.0,2.33,3,6.99
+The Meson of Gauss,Menu & Options,14,35.7,1.29,14,6.45
+The Meson of Gauss,Booking & Reservations,2,100.0,3.0,2,6.0
+Vittorio Ristorante,Hygiene & Cleanliness,2,100.0,3.0,2,6.0
+The Meson of Gauss,Overall Experience,7,57.1,1.43,6,5.72
+Mitica,Price / Value,9,44.4,1.33,8,5.31
+Mitica,Food Quality,85,5.9,1.04,85,5.22
+Mitica,Ambiance,57,8.8,1.04,57,5.22
+The Meson of Gauss,Hygiene & Cleanliness,2,100.0,2.5,2,5.0
+IDA Restaurant Bar,Price / Value,10,40.0,1.2,10,4.8
+Vittorio Ristorante,Staff Attitude,68,4.4,1.07,67,3.2
+IDA Restaurant Bar,Hygiene & Cleanliness,1,100.0,3.0,True,3.0
+The Meson of Gauss,Ambiance,38,7.9,1.0,36,3.0
+Vittorio Ristorante,Price / Value,12,16.7,1.08,12,2.16
+The Meson of Gauss,Delivery & Takeaway,1,100.0,2.0,True,2.0
+Vittorio Ristorante,Booking & Reservations,2,50.0,1.5,2,1.5
+Vittorio Ristorante,Overall Experience,18,5.6,1.11,10,1.12
+Mitica,Overall Experience,20,5.0,1.05,20,1.05
+IDA Restaurant Bar,Ambiance,46,2.2,1.0,46,1.01
+IDA Restaurant Bar,Booking & Reservations,1,100.0,1.0,True,1.0
+Mitica,Delivery & Takeaway,2,50.0,1.0,2,1.0
+IDA Restaurant Bar,Overall Experience,14,7.1,1.0,12,0.99
+Vittorio Ristorante,Menu & Options,9,0.0,1.0,9,0.0
