@@ -51,9 +51,6 @@ python run_pipeline.py --client ida --skip-fetch
 # Fetch new reviews from Apify, then run pipeline (requires Apify token in .env)
 python run_pipeline.py --client ida
 
-# Fetch only older reviews not yet in the dataset (backfill)
-python run_pipeline.py --client ida --backfill
-
 # Fetch reviews within a specific date range
 python run_pipeline.py --client ida --from-date 2025-01-01 --to-date 2025-06-01
 
@@ -65,11 +62,13 @@ The pipeline is incrementally idempotent:
 
 | Step | Behavior |
 |---|---|
+| 0 — fetch | Calls Apify. Skipped with `--skip-fetch`. |
 | 1 — ingestion | Merges new JSONs into raw.csv by `review_id`. Re-running with the same data adds 0 rows. |
-| 2 — cleaning | Detects new `review_id`s not yet in reviews_clean.csv, cleans only those, appends. |
-| 3 — classification | Skips already-classified `review_id`s. |
+| 2 — cleaning | Detects new `review_id`s not yet in reviews_clean.csv, cleans only those, appends. Skipped if no new reviews. |
+| 3 — classification | Skips already-classified `review_id`s. Skipped if no new reviews. |
 | 4 — aggregation | Always recomputes (~50ms, pure pandas, no LLM). |
-| 5 — enrichment | Skips already-enriched `(business, topic)` pairs. |
+| 5 — enrichment | Re-enriches only topics whose metrics changed. Skipped if nothing changed. |
+| 6 — PDF | Regenerates only when new reviews were classified. |
 
 ## Adding a new client
 
