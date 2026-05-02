@@ -81,6 +81,7 @@ clients/*/data/2_clean/
 # --- Client outputs ---
 clients/*/outputs/reports/*.pdf
 clients/*/outputs/exports/*
+clients/*/outputs/tmp/*
 
 # --- Outputs legacy (pre-refactor) ---
 outputs/dashboards/*
