@@ -259,7 +259,7 @@ def _check_text_reference(text_reference: str, clean_text: str, review_id: str) 
     text_words = set(clean_text.lower().split())
     overlap = sum(1 for w in ref_words if w in text_words) / len(ref_words)
     if overlap < 0.8:
-        logger.warning(
+        logger.debug(
             "text_reference may not be verbatim (review_id=%s): %r",
             review_id,
             text_reference,
