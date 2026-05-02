@@ -5,16 +5,16 @@ target: IDA Restaurant Bar
 
 places:
   - business_name: IDA Restaurant Bar
-    url: "https://maps.google.com/?cid=PLACEHOLDER"
+    url: "https://www.google.com/maps/place/IDA+Restaurant+Bar/@-31.3601191,-64.2551588,708m/data=!3m3!1e3!4b1!5s0x94329eb70c08518f:0xf80a789805ae73cb!4m6!3m5!1s0x94329f5409545747:0xc2a7f019d0fb4d52!8m2!3d-31.3601237!4d-64.2525839!16s%2Fg%2F11rclc4hbt?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D"
     role: target
   - business_name: Vittorio Ristorante
-    url: "https://maps.google.com/?cid=PLACEHOLDER"
+    url: "https://www.google.com/maps/place/Vittorio+Ristorante/@-31.3555498,-64.2533363,17z/data=!3m1!4b1!4m6!3m5!1s0x94329eb11afc898b:0x64b72dc31e5cec29!8m2!3d-31.3555544!4d-64.2507614!16s%2Fg%2F11bytn4jf4?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D"
     role: competitor
   - business_name: El Mesón de Gauss
-    url: "https://maps.google.com/?cid=PLACEHOLDER"
+    url: "https://www.google.com/maps/place/El+Mes%C3%B3n+de+Gauss/@-31.3554816,-64.2529061,17z/data=!3m2!4b1!5s0x94329eb111e95899:0xdcc7c2fedabba76d!4m6!3m5!1s0x94329fa527100a0d:0xc75bef45d86e167e!8m2!3d-31.3554862!4d-64.2503312!16s%2Fg%2F11h8bcllyh?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D"
     role: competitor
   - business_name: Mitica
-    url: "https://maps.google.com/?cid=PLACEHOLDER"
+    url: "https://www.google.com/maps/place/Mitica/@-31.3595109,-64.2550249,17z/data=!3m1!4b1!4m6!3m5!1s0x94329fec3beb4d3b:0x8b62241844d80fd0!8m2!3d-31.3595155!4d-64.25245!16s%2Fg%2F11v40w8403?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D"
     role: competitor
 
 branding:

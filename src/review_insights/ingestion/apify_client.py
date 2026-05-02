@@ -1,4 +1,4 @@
-"""Fetches Google Maps reviews from Apify and saves raw JSON to data/0_input/."""
+"""Fetches Google Maps reviews from Apify and saves raw JSON to the client's input dir."""
 
 import json
 import logging
@@ -8,33 +8,41 @@ from pathlib import Path
 
 from apify_client import ApifyClient
 
+from review_insights.config import PlaceConfig
+
 logger = logging.getLogger(__name__)
 
 _ACTOR_ID = "compass/crawler-google-places"
-_OUTPUT_DIR = Path(__file__).resolve().parents[3] / "data" / "0_input"
 
 
 def fetch_reviews(
-    urls: list[str],
+    places: list[PlaceConfig],
+    output_dir: Path,
     max_reviews: int = 100,
     start_date: str | None = None,
+    end_date: str | None = None,
 ) -> list[Path]:
-    """Fetch Google Maps reviews for each URL and save as JSON files in data/0_input/.
+    """Fetch Google Maps reviews for each place and save as JSON files.
 
     Args:
-        urls: Google Maps place URLs. First URL = main client, rest = competitors.
+        places: Place configs from the client config (business_name + url + role).
+        output_dir: Directory where JSON files will be saved (client's data/0_input/).
         max_reviews: Max reviews to fetch per place.
         start_date: Optional ISO date (YYYY-MM-DD) — only fetch reviews from this date on.
+        end_date: Optional ISO date (YYYY-MM-DD) — only fetch reviews up to this date.
 
     Returns:
         List of paths to saved JSON files, one per place.
     """
     api_key = os.environ["APIFY_API_KEY"]
     client = ApifyClient(api_key)
-    _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     run_input = {
-        "startUrls": [{"url": url} for url in urls],
+        "startUrls": [
+            {"url": p.url, "userData": {"canonical_name": p.business_name}}
+            for p in places
+        ],
         "maxReviews": max_reviews,
         "reviewsSort": "newest",
         "reviewsOrigin": "all",
@@ -50,8 +58,10 @@ def fetch_reviews(
     }
     if start_date:
         run_input["reviewsStartDate"] = start_date
+    if end_date:
+        run_input["reviewsEndDate"] = end_date
 
-    logger.info("Starting Apify run — %d URLs, max %d reviews each", len(urls), max_reviews)
+    logger.info("Starting Apify run — %d URLs, max %d reviews each", len(places), max_reviews)
     run = client.actor(_ACTOR_ID).call(run_input=run_input)
     logger.info("Apify run finished — dataset: %s", run["defaultDatasetId"])
 
@@ -61,7 +71,7 @@ def fetch_reviews(
     saved_paths: list[Path] = []
 
     for item in client.dataset(run["defaultDatasetId"]).iterate_items():
-        place_name = item.get("title", "unknown")
+        place_name = (item.get("userData") or {}).get("canonical_name") or item.get("title", "unknown")
         reviews: list[dict] = item.get("reviews", [])
 
         if not reviews:
@@ -73,7 +83,7 @@ def fetch_reviews(
             review["title"] = place_name
 
         slug = _slug(place_name)
-        path = _OUTPUT_DIR / f"{slug}_reviews.json"
+        path = output_dir / f"{slug}_reviews.json"
         path.write_text(json.dumps(reviews, ensure_ascii=False, indent=2), encoding="utf-8")
         logger.info("Saved %d reviews for '%s' → %s", len(reviews), place_name, path.name)
         saved_paths.append(path)

@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 _TOP_QUOTES = 5
 _MAX_RETRIES = 3
-
+_METRIC_COLS = ["mention_count", "pct_negative", "priority_score"]
 
 _LIMITS = {"title": 80, "description": 400, "evidence": 200, "recommendation": 200}
 
@@ -44,14 +44,62 @@ def enrich_insights(
 ) -> pd.DataFrame:
     """Enrich each row in insights_df with title, description, evidence, recommendation.
 
-    Idempotent: skips if output_path already exists.
-    Rows without available quotes get null enrichment fields and are not retried.
+    Incremental: if output_path already exists, only re-enriches rows whose
+    mention_count, pct_negative, or priority_score changed since the last run.
+    Rows with no changes keep their existing enrichment. New topics are enriched fresh.
     """
-    if output_path.exists():
-        logger.info("insights_enriched.csv already exists — skipping enrichment")
-        return pd.read_csv(output_path)
-
     system_prompt = prompt_path.read_text(encoding="utf-8")
+
+    if output_path.exists():
+        existing = pd.read_csv(output_path)
+        to_enrich = _find_changed_rows(insights_df, existing)
+
+        if to_enrich.empty:
+            logger.info("enrichment SKIPPED — no metric changes since last run")
+            return existing
+
+        logger.info("Re-enriching %d/%d topics (metrics changed)", len(to_enrich), len(insights_df))
+        new_enriched = _enrich_rows(to_enrich, classified_df, provider, system_prompt)
+
+        changed_keys = set(zip(to_enrich["business_name"], to_enrich["main_topic"]))
+        kept = existing[
+            ~existing.apply(lambda r: (r["business_name"], r["main_topic"]) in changed_keys, axis=1)
+        ]
+        result = pd.concat([kept, new_enriched], ignore_index=True)
+    else:
+        logger.info("Enriching %d topics (first run)", len(insights_df))
+        result = _enrich_rows(insights_df, classified_df, provider, system_prompt)
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    result.to_csv(output_path, index=False)
+    logger.info("insights_enriched.csv written — %d rows", len(result))
+    return result
+
+
+def _find_changed_rows(insights_df: pd.DataFrame, existing: pd.DataFrame) -> pd.DataFrame:
+    """Return rows from insights_df that are new or have changed metric values vs existing."""
+    existing_metrics = existing[["business_name", "main_topic"] + _METRIC_COLS].rename(
+        columns={c: f"_old_{c}" for c in _METRIC_COLS}
+    )
+    merged = insights_df.merge(existing_metrics, on=["business_name", "main_topic"], how="left")
+
+    changed = pd.Series(False, index=merged.index)
+    for col in _METRIC_COLS:
+        old_col = f"_old_{col}"
+        is_new = merged[old_col].isna()
+        is_changed = ~is_new & (merged[col].round(4) != merged[old_col].round(4))
+        changed |= is_new | is_changed
+
+    return insights_df[changed.values]
+
+
+def _enrich_rows(
+    insights_df: pd.DataFrame,
+    classified_df: pd.DataFrame,
+    provider: LLMProvider,
+    system_prompt: str,
+) -> pd.DataFrame:
+    """Enrich a set of insight rows with LLM-generated fields. Returns df with enrichment columns."""
     results = []
     total = len(insights_df)
 
@@ -66,11 +114,7 @@ def enrich_insights(
         results.append(result)
         logger.info("Enriched %d/%d — %s / %s", i, total, row["business_name"], row["main_topic"])
 
-    enriched_df = pd.DataFrame(results)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    enriched_df.to_csv(output_path, index=False)
-    logger.info("insights_enriched.csv written — %d rows", len(enriched_df))
-    return enriched_df
+    return pd.DataFrame(results)
 
 
 def _get_top_quotes(classified_df: pd.DataFrame, business: str, topic: str) -> list[str]:
