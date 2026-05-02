@@ -134,4 +134,3 @@ To rerun from scratch: delete all CSVs under `clients/<slug>/data/`.
 - **Math belongs to Python.** LLM receives pre-computed metrics — never counts or calculates.
 - **Fail loud.** LLM failures after retries log ERROR and produce null fields — pipeline does not crash.
 - **Multi-mention:** `reviews_classified.csv` has 1 row per `(review_id, mention_id)`. Always `nunique(review_id)` for counts.
-- **New columns** go through `DECISIONS.md` before existing in code.
