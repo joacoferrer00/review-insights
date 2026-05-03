@@ -1,0 +1,40 @@
+topics:
+  - name: Haircut & Styling
+    description: Quality and technique of haircuts, blowouts, and styling; whether the result matches what was requested
+    label_es: Corte y peinado
+
+  - name: Color & Chemical Treatments
+    description: Quality of coloring, highlights, bleaching, keratin, straightening, and perms; results and damage
+    label_es: Color y tratamientos químicos
+
+  - name: Stylists & Staff
+    description: Professionalism, expertise, listening skills, and attitude of stylists and reception staff
+    label_es: Estilistas y personal
+
+  - name: Cleanliness & Hygiene
+    description: Cleanliness of the salon, tools, capes, and workstations; hygiene standards
+    label_es: Limpieza e higiene
+
+  - name: Products
+    description: Quality and brand of shampoos, conditioners, dyes, and treatments used or sold
+    label_es: Productos utilizados
+
+  - name: Price & Value
+    description: Pricing, perceived value for money, transparency in quoting, and promotions
+    label_es: Precio y valor
+
+  - name: Appointments & Punctuality
+    description: Ease of booking, on-time service, waiting times, and cancellation handling
+    label_es: Turnos y puntualidad
+
+  - name: Facilities & Ambiance
+    description: Comfort, decor, music, lighting, temperature, and overall atmosphere of the salon
+    label_es: Instalaciones y ambiente
+
+  - name: Final Results
+    description: Whether the client got what they asked for; satisfaction with the final look and durability
+    label_es: Resultado final
+
+  - name: Overall Experience
+    description: Holistic impression when no single area dominates the review
+    label_es: Experiencia general
