@@ -1,12 +1,19 @@
 """Review Intelligence Dashboard — Streamlit entry point."""
 
-import io
+import os
 import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
+
+# Purge stale review_insights modules from Streamlit's module cache on each rerun
+for _key in list(sys.modules.keys()):
+    if "review_insights" in _key:
+        del sys.modules[_key]
+
+import io
 from pathlib import Path
 
 import streamlit as st
-
-sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from review_insights.config import load_client_config, load_topic_labels
 from review_insights.reporting.dashboard import (
