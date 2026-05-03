@@ -142,15 +142,20 @@ h1, h2, h3, h4 {{
     background-color: {BG} !important;
     border-bottom: 1px solid {BORDER} !important;
     gap: 0 !important;
+    margin-top: 1.5rem !important;
 }}
 button[data-baseweb="tab"] {{
     font-family: 'DM Sans', sans-serif !important;
-    font-size: 1rem !important;
     font-weight: 600 !important;
     color: {MUTED} !important;
     padding: 0.6rem 1.4rem !important;
     background: transparent !important;
     border-radius: 0 !important;
+}}
+button[data-baseweb="tab"] span,
+button[data-baseweb="tab"] div {{
+    font-size: 1.2rem !important;
+    font-family: 'DM Sans', sans-serif !important;
 }}
 button[data-baseweb="tab"]:hover {{
     color: {TEXT} !important;
