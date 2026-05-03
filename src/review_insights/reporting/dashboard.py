@@ -16,6 +16,8 @@ HEATMAP_SCALE = ["#131929", "#1a2f52", "#25467a", "#3666a8", "#4a90d9"]
 SENTIMENT_ES = {"positive": "Positivo", "neutral": "Neutral", "negative": "Negativo"}
 URGENCY_ES = {"high": "Alta", "medium": "Media", "low": "Baja"}
 
+PLOTLY_CONFIG = {"modeBarButtonsToRemove": ["zoom", "pan", "zoomIn", "zoomOut", "autoScale", "resetScale"], "displaylogo": False}
+
 # ── Data loaders ─────────────────────────────────────────────────────────────
 
 
