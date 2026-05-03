@@ -44,7 +44,7 @@ def load_classified(path: Path, topic_labels: dict[str, str]) -> pd.DataFrame:
 # ── Tab 1: Resumen ───────────────────────────────────────────────────────────
 
 
-def chart_sentiment_pie(row: pd.Series) -> go.Figure:
+def chart_sentiment_pie(row: pd.Series, layout_extras: dict | None = None) -> go.Figure:
     labels = list(SENTIMENT_COLORS.keys())
     values = [row.pct_positive, row.pct_neutral, row.pct_negative]
     fig = go.Figure(go.Pie(
@@ -55,10 +55,12 @@ def chart_sentiment_pie(row: pd.Series) -> go.Figure:
         textinfo="label+percent",
     ))
     fig.update_layout(showlegend=False, margin=dict(t=10, b=10, l=10, r=10), height=270)
+    if layout_extras:
+        fig.update_layout(**layout_extras)
     return fig
 
 
-def chart_top_topics(insights_df: pd.DataFrame, business: str) -> go.Figure:
+def chart_top_topics(insights_df: pd.DataFrame, business: str, layout_extras: dict | None = None) -> go.Figure:
     df = (
         insights_df[insights_df.business_name == business]
         .nlargest(6, "mention_count")
@@ -79,13 +81,15 @@ def chart_top_topics(insights_df: pd.DataFrame, business: str) -> go.Figure:
         coloraxis_showscale=True,
         coloraxis_colorbar=dict(thickness=12, len=0.8),
     )
+    if layout_extras:
+        fig.update_layout(**layout_extras)
     return fig
 
 
 # ── Tab 2: Desglose de problemas ─────────────────────────────────────────────
 
 
-def chart_topic_sentiment(classified_df: pd.DataFrame, business: str) -> go.Figure:
+def chart_topic_sentiment(classified_df: pd.DataFrame, business: str, layout_extras: dict | None = None) -> go.Figure:
     df = classified_df[
         (classified_df.business_name == business)
         & (classified_df.main_topic.notna())
@@ -108,10 +112,12 @@ def chart_topic_sentiment(classified_df: pd.DataFrame, business: str) -> go.Figu
         xaxis_tickangle=-30,
         legend=dict(orientation="h", yanchor="bottom", y=1.02),
     )
+    if layout_extras:
+        fig.update_layout(**layout_extras)
     return fig
 
 
-def chart_urgency(classified_df: pd.DataFrame, business: str) -> go.Figure:
+def chart_urgency(classified_df: pd.DataFrame, business: str, layout_extras: dict | None = None) -> go.Figure:
     df = classified_df[
         (classified_df.business_name == business) & (classified_df.urgency.notna())
     ]
@@ -130,13 +136,15 @@ def chart_urgency(classified_df: pd.DataFrame, business: str) -> go.Figure:
         category_orders={"urgency": order},
     )
     fig.update_layout(showlegend=False, margin=dict(t=10, b=10, l=10, r=10), height=260)
+    if layout_extras:
+        fig.update_layout(**layout_extras)
     return fig
 
 
 # ── Tab 3: Benchmark ─────────────────────────────────────────────────────────
 
 
-def chart_rating_benchmark(aggregated_df: pd.DataFrame) -> go.Figure:
+def chart_rating_benchmark(aggregated_df: pd.DataFrame, layout_extras: dict | None = None) -> go.Figure:
     df = aggregated_df.sort_values("avg_rating", ascending=True)
     fig = go.Figure(go.Bar(
         x=df.avg_rating,
@@ -151,10 +159,12 @@ def chart_rating_benchmark(aggregated_df: pd.DataFrame) -> go.Figure:
         margin=dict(t=10, b=10, l=10, r=50),
         height=230,
     )
+    if layout_extras:
+        fig.update_layout(**layout_extras)
     return fig
 
 
-def chart_sentiment_benchmark(aggregated_df: pd.DataFrame) -> go.Figure:
+def chart_sentiment_benchmark(aggregated_df: pd.DataFrame, layout_extras: dict | None = None) -> go.Figure:
     df = aggregated_df.sort_values("pct_positive", ascending=True)
     fig = go.Figure()
     for label, col in [("Positivo", "pct_positive"), ("Neutral", "pct_neutral"), ("Negativo", "pct_negative")]:
@@ -169,10 +179,12 @@ def chart_sentiment_benchmark(aggregated_df: pd.DataFrame) -> go.Figure:
         legend=dict(orientation="h", yanchor="bottom", y=1.02),
         xaxis_title="% menciones",
     )
+    if layout_extras:
+        fig.update_layout(**layout_extras)
     return fig
 
 
-def chart_topic_heatmap(insights_df: pd.DataFrame) -> go.Figure:
+def chart_topic_heatmap(insights_df: pd.DataFrame, layout_extras: dict | None = None) -> go.Figure:
     pivot = (
         insights_df.groupby(["business_name", "main_topic"])["mention_count"]
         .sum()
@@ -202,4 +214,6 @@ def chart_topic_heatmap(insights_df: pd.DataFrame) -> go.Figure:
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
     )
+    if layout_extras:
+        fig.update_layout(**layout_extras)
     return fig
