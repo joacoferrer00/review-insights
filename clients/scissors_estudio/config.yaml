@@ -1,0 +1,19 @@
+slug: scissors_estudio
+business_name: "SCISSOR's Estudio"
+industry: peluquerias
+target: "SCISSOR's Estudio"
+
+places:
+  - business_name: "SCISSOR's Estudio"
+    url: "https://www.google.com/maps/place/Peluqueria+SCISSOR%E2%80%99s+estudio/@-31.4283586,-64.189608,17z/data=!3m1!4b1!4m6!3m5!1s0x9432a352b323aaa1:0x6793c22783189665!8m2!3d-31.4283586!4d-64.189608!16s%2Fg%2F11q1pj75tj?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D"
+    role: target
+  - business_name: MRE Estilistas
+    url: "https://www.google.com/maps/place/MRE+Estilistas+Nueva+Cordoba+Peluquer%C3%ADa/@-31.4301306,-64.1916121,17z/data=!3m1!4b1!4m6!3m5!1s0x9432a28bd70a3465:0xd7d9ce46de68da96!8m2!3d-31.4301306!4d-64.1916121!16s%2Fg%2F11f28xmw0n?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D"
+    role: competitor
+  - business_name: MADE
+    url: "https://www.google.com/maps/place/MADE/@-31.4279086,-64.1927047,17z/data=!3m1!4b1!4m6!3m5!1s0x9432a28e9550fbbd:0xfe4a2916033447db!8m2!3d-31.4279133!4d-64.1878338!16s%2Fg%2F11b893ng8x?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D"
+    role: competitor
+
+branding:
+  primary_color: "#1a1a2e"
+  logo: null
