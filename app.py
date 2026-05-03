@@ -208,6 +208,13 @@ hr {{
     border-radius: 8px;
     overflow: hidden;
 }}
+
+/* ── Restore Material Icons font for Streamlit UI chrome ── */
+.material-symbols-rounded,
+[data-testid="stSidebarCollapseButton"] span,
+[data-testid="stSidebarCollapsedControl"] span {{
+    font-family: 'Material Symbols Rounded' !important;
+}}
 </style>
 """, unsafe_allow_html=True)
 
