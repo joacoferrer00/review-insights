@@ -1,0 +1,29 @@
+business_name,main_topic,mention_count,pct_negative,avg_urgency_score,actionable_count,priority_score
+MRE Estilistas Nueva Cordoba Peluquería,Price & Value,17,100.0,2.12,17,36.04
+MRE Estilistas Nueva Cordoba Peluquería,Appointments & Punctuality,13,92.3,2.38,13,28.56
+MRE Estilistas Nueva Cordoba Peluquería,Color & Chemical Treatments,18,55.6,2.06,17,20.62
+MRE Estilistas Nueva Cordoba Peluquería,Stylists & Staff,89,16.9,1.34,86,20.15
+MRE Estilistas Nueva Cordoba Peluquería,Cleanliness & Hygiene,4,100.0,3.0,4,12.0
+MRE Estilistas Nueva Cordoba Peluquería,Haircut & Styling,18,33.3,1.61,17,9.65
+MRE Estilistas Nueva Cordoba Peluquería,Final Results,17,29.4,1.53,16,7.65
+MADE,Appointments & Punctuality,9,44.4,1.67,8,6.67
+MADE,Stylists & Staff,54,9.3,1.15,45,5.78
+MADE,Price & Value,8,37.5,1.38,6,4.14
+MRE Estilistas Nueva Cordoba Peluquería,Overall Experience,14,21.4,1.29,7,3.86
+Peluqueria SCISSOR’s estudio,Overall Experience,12,16.7,1.33,11,2.67
+MRE Estilistas Nueva Cordoba Peluquería,Facilities & Ambiance,4,50.0,1.25,4,2.5
+MRE Estilistas Nueva Cordoba Peluquería,Products,4,25.0,1.5,4,1.5
+MADE,Haircut & Styling,14,7.1,1.14,13,1.13
+Peluqueria SCISSOR’s estudio,Haircut & Styling,29,3.4,1.07,26,1.06
+Peluqueria SCISSOR’s estudio,Stylists & Staff,53,1.9,1.04,51,1.05
+MADE,Cleanliness & Hygiene,1,0.0,1.0,False,0.0
+MADE,Color & Chemical Treatments,6,0.0,1.0,5,0.0
+MADE,Facilities & Ambiance,9,0.0,1.0,7,0.0
+MADE,Products,6,0.0,1.0,6,0.0
+MADE,Overall Experience,12,0.0,1.0,6,0.0
+MADE,Final Results,5,0.0,1.0,4,0.0
+Peluqueria SCISSOR’s estudio,Appointments & Punctuality,2,0.0,1.0,1,0.0
+Peluqueria SCISSOR’s estudio,Final Results,3,0.0,1.0,3,0.0
+Peluqueria SCISSOR’s estudio,Facilities & Ambiance,14,0.0,1.0,13,0.0
+Peluqueria SCISSOR’s estudio,Cleanliness & Hygiene,1,0.0,1.0,True,0.0
+Peluqueria SCISSOR’s estudio,Price & Value,2,0.0,1.0,2,0.0
