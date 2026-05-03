@@ -15,6 +15,15 @@ from pathlib import Path
 
 import streamlit as st
 
+_PLOTLY_CONFIG = {
+    "modeBarButtonsToRemove": [
+        "zoom2d", "pan2d", "select2d", "lasso2d",
+        "zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d",
+        "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines",
+    ],
+    "displaylogo": False,
+}
+
 from review_insights.config import load_client_config, load_topic_labels
 from review_insights.reporting.dashboard import (
     chart_rating_benchmark,
@@ -132,23 +141,23 @@ with tab1:
     col_a, col_b = st.columns(2)
     with col_a:
         st.markdown("**Distribución de sentiment**")
-        st.plotly_chart(chart_sentiment_pie(row), use_container_width=True)
+        st.plotly_chart(chart_sentiment_pie(row), use_container_width=True, config=_PLOTLY_CONFIG)
     with col_b:
         st.markdown("**Temas más mencionados**")
-        st.plotly_chart(chart_top_topics(insights, selected), use_container_width=True)
+        st.plotly_chart(chart_top_topics(insights, selected), use_container_width=True, config=_PLOTLY_CONFIG)
 
 # ── Tab 2: Desglose de problemas ─────────────────────────────────────────────
 
 with tab2:
     st.subheader(f"Desglose por tema — {selected}")
-    st.plotly_chart(chart_topic_sentiment(classified, selected), use_container_width=True)
+    st.plotly_chart(chart_topic_sentiment(classified, selected), use_container_width=True, config=_PLOTLY_CONFIG)
 
     st.divider()
     col_a, col_b = st.columns([1, 2])
 
     with col_a:
         st.markdown("**Distribución de urgencia**")
-        st.plotly_chart(chart_urgency(classified, selected), use_container_width=True)
+        st.plotly_chart(chart_urgency(classified, selected), use_container_width=True, config=_PLOTLY_CONFIG)
 
     with col_b:
         st.markdown("**Citas negativas destacadas**")
@@ -169,14 +178,14 @@ with tab3:
     col_a, col_b = st.columns(2)
     with col_a:
         st.markdown("**Rating promedio**")
-        st.plotly_chart(chart_rating_benchmark(agg), use_container_width=True)
+        st.plotly_chart(chart_rating_benchmark(agg), use_container_width=True, config=_PLOTLY_CONFIG)
     with col_b:
         st.markdown("**Distribución de sentiment**")
-        st.plotly_chart(chart_sentiment_benchmark(agg), use_container_width=True)
+        st.plotly_chart(chart_sentiment_benchmark(agg), use_container_width=True, config=_PLOTLY_CONFIG)
 
     st.divider()
     st.markdown("**Frecuencia de temas por negocio** (menciones)")
-    st.plotly_chart(chart_topic_heatmap(insights), use_container_width=True)
+    st.plotly_chart(chart_topic_heatmap(insights), use_container_width=True, config=_PLOTLY_CONFIG)
 
 # ── Tab 4: Plan de acción ─────────────────────────────────────────────────────
 
@@ -223,7 +232,7 @@ with tab4:
         display = biz_insights[cols_show].rename(columns=rename)
         display["% Negativo"] = display["% Negativo"].apply(lambda x: f"{x:.0f}%")
         display["Score prioridad"] = display["Score prioridad"].round(1)
-        st.dataframe(display, use_container_width=True)
+        st.dataframe(display, use_container_width=True, config=_PLOTLY_CONFIG)
 
     st.caption("Score prioridad = menciones × urgencia × % negativo. Cuanto más alto, más impacto tiene resolver ese issue.")
 
