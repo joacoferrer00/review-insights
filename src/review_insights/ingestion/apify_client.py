@@ -65,13 +65,24 @@ def fetch_reviews(
     run = client.actor(_ACTOR_ID).call(run_input=run_input)
     logger.info("Apify run finished — dataset: %s", run["defaultDatasetId"])
 
-    # The Actor returns one item per place with reviews nested inside.
-    # We flatten to a list of review objects, each with the place's title injected,
-    # so the ingestion module can process them as a flat array.
+    # Build place-ID → business_name lookup. The actor doesn't propagate userData
+    # back in dataset items, so we match by the hex place ID embedded in both
+    # the config URL and the actor's output URL (e.g. "0x94328300201726fb:0x6ece96acd7ad850c").
+    place_id_to_name = {}
+    for p in places:
+        pid = _extract_place_id(p.url)
+        if pid:
+            place_id_to_name[pid] = p.business_name
+
     saved_paths: list[Path] = []
 
     for item in client.dataset(run["defaultDatasetId"]).iterate_items():
-        place_name = (item.get("userData") or {}).get("canonical_name") or item.get("title", "unknown")
+        item_pid = _extract_place_id(item.get("url", ""))
+        place_name = (
+            place_id_to_name.get(item_pid)
+            or (item.get("userData") or {}).get("canonical_name")
+            or item.get("title", "unknown")
+        )
         reviews: list[dict] = item.get("reviews", [])
 
         if not reviews:
@@ -93,3 +104,9 @@ def fetch_reviews(
 
 def _slug(name: str) -> str:
     return re.sub(r"[^a-zA-Z0-9]+", "_", name).strip("_").lower()
+
+
+def _extract_place_id(url: str) -> str | None:
+    """Extract the hex place ID (e.g. '0x94328300201726fb:0x6ece96acd7ad850c') from a Google Maps URL."""
+    match = re.search(r"0x[0-9a-f]+:0x[0-9a-f]+", url, re.IGNORECASE)
+    return match.group(0).lower() if match else None
