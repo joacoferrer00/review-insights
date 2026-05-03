@@ -223,6 +223,7 @@ def main() -> None:
         provider = GeminiProvider(api_key=api_key, model=model)
         pdf_path = render_pdf(
             business=cfg.target,
+            client_slug=cfg.slug,
             aggregated_df=aggregated_df,
             enriched_df=enriched_df,
             provider=provider,

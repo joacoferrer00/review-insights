@@ -9,6 +9,7 @@ from pathlib import Path
 
 import markdown as md
 import pandas as pd
+import qrcode
 from jinja2 import Environment, FileSystemLoader
 from pydantic import BaseModel, field_validator
 
@@ -132,8 +133,20 @@ def _extract_json(text: str) -> str:
 _TEMPLATES_DIR = Path(__file__).parent / "templates"
 
 
+_DASHBOARD_BASE = "https://review-insights-audit.streamlit.app"
+
+
+def _generate_qr_png(client_slug: str, tmp_dir: Path) -> Path:
+    url = f"{_DASHBOARD_BASE}?client={client_slug}"
+    img = qrcode.make(url)
+    path = tmp_dir / "qr.png"
+    img.save(str(path))
+    return path
+
+
 def render_pdf(
     business: str,
+    client_slug: str,
     aggregated_df: pd.DataFrame,
     enriched_df: pd.DataFrame,
     provider: LLMProvider,
@@ -153,8 +166,9 @@ def render_pdf(
     logger.info("Generating executive summary for %s", business)
     summary = generate_executive_summary(business, aggregated_df, enriched_df, provider, prompt_path)
 
-    # ── 2. Export charts to PNG ───────────────────────────────────────────────
+    # ── 2. Export charts + QR to PNG ─────────────────────────────────────────
     logger.info("Exporting charts for %s", business)
+    qr_path = _generate_qr_png(client_slug, tmp_dir)
     biz_row = aggregated_df[aggregated_df["business_name"] == business].iloc[0]
 
     pie_fig = chart_sentiment_pie(biz_row)
@@ -191,7 +205,8 @@ def render_pdf(
         summary=summary,
         insights=business_insights,
         benchmark=benchmark_rows,
-        charts={"pie": pie_path.as_uri(), "topics": topics_path.as_uri()},
+        charts={"pie": pie_path.as_uri(), "topics": topics_path.as_uri(), "qr": qr_path.as_uri()},
+        dashboard_url=f"{_DASHBOARD_BASE}?client={client_slug}",
         css_path=(_TEMPLATES_DIR / "styles.css").as_uri(),
     )
 
