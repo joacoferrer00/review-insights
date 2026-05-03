@@ -1,10 +1,10 @@
 slug: scissors_estudio
-business_name: "SCISSOR's Estudio"
+business_name: "SCISSOR’s Estudio"
 industry: peluquerias
-target: "SCISSOR's Estudio"
+target: "Peluqueria SCISSOR’s estudio"
 
 places:
-  - business_name: "SCISSOR's Estudio"
+  - business_name: "Peluqueria SCISSOR’s estudio"
     url: "https://www.google.com/maps/place/Peluqueria+SCISSOR%E2%80%99s+estudio/@-31.4283586,-64.189608,17z/data=!3m1!4b1!4m6!3m5!1s0x9432a352b323aaa1:0x6793c22783189665!8m2!3d-31.4283586!4d-64.189608!16s%2Fg%2F11q1pj75tj?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D"
     role: target
   - business_name: MRE Estilistas
