@@ -1,0 +1,4 @@
+business_name,total_reviews,reviews_with_text,avg_rating,pct_positive,pct_neutral,pct_negative,top_topic_1,top_topic_2,top_topic_3,high_urgency_count,actionable_count
+Bonafide Villa Allende,100,60,4.2,78.1,1.0,21.0,Staff Attitude,Food Quality,Ambiance,8,104
+Panicafe,100,44,4.5,74.7,1.3,24.0,Staff Attitude,Food Quality,Ambiance,7,73
+Panicafe Villa Allende,100,29,4.8,93.3,0.0,6.7,Food Quality,Staff Attitude,Ambiance,1,43

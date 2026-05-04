@@ -1,0 +1,19 @@
+slug: panicafe
+business_name: Panicafe Villa Allende
+industry: restaurants
+target: Panicafe Villa Allende
+
+places:
+  - business_name: Panicafe Villa Allende
+    url: "https://www.google.com/maps/place/Panicafe+Villa+Allende/@-31.2897616,-64.2986735,17z/data=!3m2!4b1!5s0x94329d1ee46ea9c9:0x9bacd3f5416f94b9!4m6!3m5!1s0x94329de09661e0c9:0x36ead92edf98b547!8m2!3d-31.2897663!4d-64.2938026!16s%2Fg%2F11s0tg1c2z?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D"
+    role: target
+  - business_name: "Panicafé Nuñez"
+    url: "https://www.google.com/maps/place/Panicaf%C3%A9/@-31.367687,-64.239102,17z/data=!3m1!4b1!4m6!3m5!1s0x9432993113db342f:0xc1d63d62b09b21bf!8m2!3d-31.3676917!4d-64.2342311!16s%2Fg%2F11c0vljt_g?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D"
+    role: competitor
+  - business_name: Bonafide Villa Allende
+    url: "https://www.google.com/maps/place/Bonafide+Villa+Allende/@-31.2986056,-64.2902372,17z/data=!3m1!4b1!4m6!3m5!1s0x94329d006026be17:0xc0966269dc2d8f42!8m2!3d-31.2986102!4d-64.2876623!16s%2Fg%2F11mdg2l041?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D"
+    role: competitor
+
+branding:
+  primary_color: "#1a1a2e"
+  logo: null

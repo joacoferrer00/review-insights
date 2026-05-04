@@ -1,0 +1,21 @@
+business_name,main_topic,mention_count,pct_negative,avg_urgency_score,actionable_count,priority_score
+Panicafe,Service Speed,9,88.9,2.11,9,16.88
+Bonafide Villa Allende,Staff Attitude,43,20.9,1.28,43,11.5
+Bonafide Villa Allende,Service Speed,11,54.5,1.64,11,9.83
+Panicafe,Food Quality,19,26.3,1.32,19,6.6
+Panicafe,Staff Attitude,20,15.0,1.3,20,3.9
+Bonafide Villa Allende,Food Quality,21,14.3,1.19,21,3.57
+Bonafide Villa Allende,Ambiance,12,16.7,1.08,12,2.16
+Panicafe Villa Allende,Service Speed,1,100.0,2.0,True,2.0
+Bonafide Villa Allende,Hygiene & Cleanliness,3,33.3,1.33,3,1.33
+Panicafe,Menu & Options,5,20.0,1.2,5,1.2
+Panicafe Villa Allende,Food Quality,14,7.1,1.14,14,1.13
+Panicafe Villa Allende,Ambiance,11,9.1,1.0,11,1.0
+Bonafide Villa Allende,Price / Value,5,20.0,1.0,5,1.0
+Panicafe,Price / Value,6,16.7,1.0,6,1.0
+Bonafide Villa Allende,Menu & Options,4,0.0,1.0,4,0.0
+Bonafide Villa Allende,Overall Experience,6,0.0,1.0,5,0.0
+Panicafe,Overall Experience,7,0.0,1.0,5,0.0
+Panicafe,Ambiance,9,0.0,1.0,9,0.0
+Panicafe Villa Allende,Overall Experience,6,0.0,1.0,4,0.0
+Panicafe Villa Allende,Staff Attitude,13,0.0,1.0,13,0.0
