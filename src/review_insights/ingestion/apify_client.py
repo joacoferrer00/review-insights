@@ -77,10 +77,9 @@ def fetch_reviews(
     saved_paths: list[Path] = []
 
     for item in client.dataset(run["defaultDatasetId"]).iterate_items():
-        item_pid = _extract_place_id(item.get("url", ""))
+        item_pid = _extract_place_id(item.get("url", "") or item.get("placeUrl", ""))
         place_name = (
             place_id_to_name.get(item_pid)
-            or (item.get("userData") or {}).get("canonical_name")
             or item.get("title", "unknown")
         )
         reviews: list[dict] = item.get("reviews", [])
