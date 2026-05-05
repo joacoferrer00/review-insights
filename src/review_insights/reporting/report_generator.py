@@ -152,6 +152,7 @@ def render_pdf(
     provider: LLMProvider,
     prompt_path: Path,
     outputs_dir: Path,
+    topic_labels: dict[str, str] | None = None,
 ) -> Path:
     """Render the full audit PDF for one business.
 
@@ -161,6 +162,10 @@ def render_pdf(
     tmp_dir = outputs_dir.parent / "tmp"
     outputs_dir.mkdir(parents=True, exist_ok=True)
     tmp_dir.mkdir(parents=True, exist_ok=True)
+
+    if topic_labels:
+        enriched_df = enriched_df.copy()
+        enriched_df["main_topic"] = enriched_df["main_topic"].map(topic_labels).fillna(enriched_df["main_topic"])
 
     # ── 1. Executive summary (LLM) ───────────────────────────────────────────
     logger.info("Generating executive summary for %s", business)

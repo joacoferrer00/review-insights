@@ -34,7 +34,7 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 import pandas as pd
 
-from review_insights.config import load_client_config, load_taxonomy
+from review_insights.config import load_client_config, load_taxonomy, load_topic_labels
 from review_insights.classification.schemas import set_taxonomy
 from review_insights.ingestion import load_reviews
 from review_insights.cleaning import clean_reviews
@@ -229,6 +229,7 @@ def main() -> None:
             provider=provider,
             prompt_path=cfg.exec_summary_prompt_path,
             outputs_dir=cfg.outputs_dir / "reports",
+            topic_labels=load_topic_labels(cfg.taxonomy_path),
         )
         logger.info("PDF done (%.1fs)", time.time() - t)
 
