@@ -1,0 +1,19 @@
+slug: aguamadre
+business_name: Aguamadre Restaurant
+industry: restaurants
+target: Aguamadre Restaurant
+
+places:
+  - business_name: Aguamadre Restaurant
+    url: "https://www.google.com/maps/place/Aguamadre+Restaurant/@-31.3846858,-64.4588706,17z/data=!3m1!4b1!4m6!3m5!1s0x942d679510da270b:0x4ea68d47f1d4d6aa!8m2!3d-31.3846886!4d-64.4559743!16s%2Fg%2F11ms7lzsps?entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D"
+    role: target
+  - business_name: Argumento Nautico
+    url: "https://www.google.com/maps/place/Argumento+Nautico/@-31.3856479,-64.4561463,17z/data=!3m1!4b1!4m6!3m5!1s0x942d67c8b5b2a8bf:0x583abbdb779be14!8m2!3d-31.3856479!4d-64.4561463!16s%2Fg%2F11pf2n_db0?entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D"
+    role: competitor
+  - business_name: Barlovento Restaurante
+    url: "https://www.google.com/maps/place/Barlovento+Restaurante/@-31.3916414,-64.4744948,17z/data=!3m1!4b1!4m6!3m5!1s0x942d67c4529a6505:0x30e3233e1772f4df!8m2!3d-31.3916461!4d-64.4696239!16s%2Fg%2F11y9px4xf9?authuser=0&hl=es-419&entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D"
+    role: competitor
+
+branding:
+  primary_color: "#1a1a2e"
+  logo: null
