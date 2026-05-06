@@ -1,0 +1,28 @@
+business_name,main_topic,mention_count,pct_negative,avg_urgency_score,actionable_count,priority_score
+Argumento Nautico,Menu & Options,6,100.0,1.17,6,7.02
+Argumento Nautico,Service Speed,7,57.1,1.57,7,6.28
+Barlovento Restaurante,Service Speed,8,37.5,1.38,8,4.14
+Barlovento Restaurante,Price / Value,7,42.9,1.14,7,3.42
+Barlovento Restaurante,Booking & Reservations,3,66.7,1.67,3,3.34
+Barlovento Restaurante,Menu & Options,7,42.9,1.0,7,3.0
+Argumento Nautico,Food Quality,30,6.7,1.1,30,2.21
+Argumento Nautico,Ambiance,50,4.0,1.0,50,2.0
+Argumento Nautico,Staff Attitude,28,7.1,1.0,28,1.99
+Aguamadre Restaurant,Service Speed,4,25.0,1.25,4,1.25
+Barlovento Restaurante,Staff Attitude,18,5.6,1.11,18,1.12
+Barlovento Restaurante,Food Quality,23,4.3,1.04,23,1.03
+Barlovento Restaurante,Overall Experience,12,8.3,1.0,12,1.0
+Argumento Nautico,Price / Value,6,16.7,1.0,6,1.0
+Aguamadre Restaurant,Ambiance,34,2.9,1.0,34,0.99
+Aguamadre Restaurant,Menu & Options,3,0.0,1.0,3,0.0
+Aguamadre Restaurant,Overall Experience,11,0.0,1.0,11,0.0
+Aguamadre Restaurant,Food Quality,62,0.0,1.0,62,0.0
+Aguamadre Restaurant,Hygiene & Cleanliness,2,0.0,1.0,2,0.0
+Argumento Nautico,Delivery & Takeaway,1,0.0,1.0,True,0.0
+Argumento Nautico,Booking & Reservations,2,0.0,1.0,2,0.0
+Aguamadre Restaurant,Staff Attitude,51,0.0,1.0,51,0.0
+Aguamadre Restaurant,Price / Value,5,0.0,1.0,5,0.0
+Barlovento Restaurante,Ambiance,26,0.0,1.0,25,0.0
+Argumento Nautico,Overall Experience,9,0.0,1.0,9,0.0
+Argumento Nautico,Hygiene & Cleanliness,1,0.0,1.0,True,0.0
+Barlovento Restaurante,Hygiene & Cleanliness,1,0.0,1.0,True,0.0
