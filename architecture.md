@@ -9,9 +9,10 @@ Data flow for `review-insights`. Run with `python run_pipeline.py --client <slug
 ```
   Config resolution
   ─────────────────
-  clients/<slug>/config.yaml          →  business_name, industry, places (URLs + roles)
-  industries/<industry>/taxonomy.yaml →  topics list
-  industries/<industry>/prompts/      →  classification, enrichment, exec_summary
+  clients/<slug>/config.yaml          →  business_name, industry, language, places (URLs + roles)
+  industries/<industry>/taxonomy.yaml →  topics list (with label_es / label_en per topic)
+  industries/<industry>/prompts/      →  classification, enrichment, exec_summary (Jinja2 templates)
+  src/review_insights/i18n/<lang>.yaml →  UI strings for PDF and dashboard
 
   Step 0 — fetch (Apify)
   ──────────────────────
@@ -20,7 +21,9 @@ Data flow for `review-insights`. Run with `python run_pipeline.py --client <slug
     • Fetches up to --limit reviews per place
     • Date filter: forward from max(date) in raw.csv (default)
                    or --no-date-filter / --from-date / --to-date
-    • Injects canonical_name via userData → saved as <slug>_reviews.json
+    • Place ID matching: uses item["inputStartUrl"] (the original URL we passed, contains
+      hex place ID 0x...:0x...) to map each result to its canonical business_name.
+      Fallback: item["title"]. Note: item["url"] uses ChIJ... format — regex won't match it.
     • Output: clients/<slug>/data/0_input/<place>_reviews.json
 
   Step 1 — ingestion
@@ -40,7 +43,7 @@ Data flow for `review-insights`. Run with `python run_pipeline.py --client <slug
 
   Step 3 — classification (LLM)             SKIPPED if no new reviews
   ──────────────────────────────
-  classify_reviews(new_clean, provider, prompt, topics)
+  classify_reviews(new_clean, provider, prompt, topics, language)
     • Batches of 5 reviews per LLM call
     • Pydantic validation → retry x3 → fallback to single-review call
     • Expands to 1–N rows per review (one per topic mention)
@@ -59,7 +62,7 @@ Data flow for `review-insights`. Run with `python run_pipeline.py --client <slug
 
   Step 5 — enrichment (LLM)                SKIPPED if metrics unchanged
   ──────────────────────────
-  enrich_insights(insights_df, classified_df, provider, prompt)
+  enrich_insights(insights_df, classified_df, provider, prompt, language)
     • 1 LLM call per (business × topic)
     • Input: metrics + top 5 quotes from reviews_classified
     • Returns: title, description, evidence, recommendation (Pydantic)
@@ -68,15 +71,20 @@ Data flow for `review-insights`. Run with `python run_pipeline.py --client <slug
 
   Step 6 — PDF                              SKIPPED if no new data
   ────────────
-  render_pdf(business, aggregated_df, enriched_df, provider, prompt)
+  render_pdf(business, aggregated_df, enriched_df, provider, prompt, language)
+    • Loads strings = load_strings(language) for all UI labels
+    • Renders exec_summary prompt as Jinja2 template ({{ language_name }}, {{ style_note }})
     • 1 LLM call for executive summary narrative (~400 words)
-    • Jinja2 → HTML → Playwright → PDF
+    • Jinja2 → HTML (audit_report.html, all strings via t=strings) → Playwright → PDF
     • Output: clients/<slug>/outputs/reports/<Business>_audit.pdf
 
   Dashboard (Streamlit Cloud, always live)
   ─────────────────────────────────────────
   app.py?client=<slug>
     • Reads: aggregated.csv, insights_enriched.csv, reviews_classified.csv
+    • Loads strings = load_strings(cfg.language) — all labels, tab names, chart axes
+    • Sentiment/urgency stored as canonical keys (positive/negative, high/medium/low);
+      mapped to display labels via strings["label_*"] at render time
     • No LLM, no pipeline — pure read + Plotly charts
     • Deployed at https://review-insights-audit.streamlit.app
 ```
@@ -115,7 +123,8 @@ To rerun from scratch: delete all CSVs under `clients/<slug>/data/`.
 
 | Module | Owns |
 |---|---|
-| `ingestion/apify_client` | Apify API calls, canonical_name injection, JSON persistence |
+| `i18n/` | `load_strings(language)` → dict of UI strings; `es.yaml` + `en.yaml` |
+| `ingestion/apify_client` | Apify API calls, place ID matching via `inputStartUrl`, JSON persistence |
 | `ingestion` | JSON → DataFrame, schema validation, merge into raw.csv |
 | `cleaning` | Dedup, date parsing, text normalization |
 | `llm/` | Provider abstraction — swap via `LLM_PROVIDER` + `LLM_MODEL` env vars |
@@ -134,3 +143,21 @@ To rerun from scratch: delete all CSVs under `clients/<slug>/data/`.
 - **Math belongs to Python.** LLM receives pre-computed metrics — never counts or calculates.
 - **Fail loud.** LLM failures after retries log ERROR and produce null fields — pipeline does not crash.
 - **Multi-mention:** `reviews_classified.csv` has 1 row per `(review_id, mention_id)`. Always `nunique(review_id)` for counts.
+- **Canonical sentiment/urgency keys:** stored as `positive/neutral/negative` and `high/medium/low` in all CSVs. Translated to display labels at render time via `strings["label_*"]`. Never store translated strings in CSVs.
+- **Prompts are Jinja2 templates:** `enrichment.md` and `exec_summary.md` use `{{ language_name }}` and `{{ style_note }}`. Rendered before the LLM call — don't use raw string concatenation.
+
+---
+
+## i18n
+
+Language is set per client in `config.yaml` (`language: es | en`). It flows through the entire pipeline:
+
+```
+config.language
+  → classify_reviews(language=)     # prompt template rendered with {{ language_name }}
+  → enrich_insights(language=)      # prompt template rendered with {{ language_name }}, {{ style_note }}
+  → render_pdf(language=)           # strings loaded, prompt rendered, HTML template uses t=strings
+  → app.py                          # strings loaded, all labels/tabs/filters from strings dict
+```
+
+Adding a new language: add `<lang>.yaml` in `src/review_insights/i18n/`, add the lang code to `LANG_NAMES` in `i18n/__init__.py`, set `language: <lang>` in the client config.
