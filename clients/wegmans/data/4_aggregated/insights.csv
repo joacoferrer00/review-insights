@@ -1,0 +1,21 @@
+business_name,main_topic,mention_count,pct_negative,avg_urgency_score,actionable_count,priority_score
+Wegmans Chesapeake VA,Price & Value for Money,27,48.1,1.07,25,13.9
+Wegmans Hanover NJ,Price & Value for Money,25,36.0,1.04,24,9.36
+Wegmans Hanover NJ,Product Variety & Availability,47,10.6,1.09,46,5.43
+Wegmans Chesapeake VA,Staff & Customer Service,22,18.2,1.23,21,4.92
+Wegmans Chesapeake VA,Product Quality & Freshness,33,12.1,1.12,33,4.47
+Wegmans Chesapeake VA,Checkout & Waiting Time,2,100.0,2.0,2,4.0
+Wegmans Hanover NJ,Staff & Customer Service,28,10.7,1.14,28,3.42
+Wegmans Chesapeake VA,Prepared Food & In-Store Dining,28,10.7,1.07,25,3.21
+Wegmans Hanover NJ,Prepared Food & In-Store Dining,19,15.8,1.0,18,3.0
+Wegmans Hanover NJ,Store Layout & Shopping Experience,8,25.0,1.25,7,2.5
+Wegmans Chesapeake VA,Store Layout & Shopping Experience,10,20.0,1.2,10,2.4
+Wegmans Hanover NJ,Product Quality & Freshness,26,7.7,1.19,25,2.38
+Wegmans Chesapeake VA,"Location, Parking & Accessibility",6,33.3,1.17,6,2.34
+Wegmans Chesapeake VA,Product Variety & Availability,50,4.0,1.02,49,2.04
+Wegmans Hanover NJ,"Location, Parking & Accessibility",3,66.7,1.0,3,2.0
+Wegmans Hanover NJ,Digital & Omnichannel Experience,2,50.0,1.5,2,1.5
+Wegmans Hanover NJ,Store Cleanliness & Maintenance,20,5.0,1.05,20,1.05
+Wegmans Chesapeake VA,Overall Experience,34,0.0,1.0,25,0.0
+Wegmans Chesapeake VA,Store Cleanliness & Maintenance,14,0.0,1.0,14,0.0
+Wegmans Hanover NJ,Overall Experience,23,0.0,1.0,16,0.0

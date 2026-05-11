@@ -1,0 +1,55 @@
+topics:
+  - name: Product Quality & Freshness
+    description: Freshness, taste, appearance, and quality of products — especially produce, meat, seafood, and prepared foods
+    label_es: Calidad y frescura de productos
+    label_en: Product quality & freshness
+
+  - name: Product Variety & Availability
+    description: Range of products, brands, and dietary options; whether items are in stock or frequently out
+    label_es: Variedad y disponibilidad
+    label_en: Product variety & availability
+
+  - name: Store Cleanliness & Maintenance
+    description: Cleanliness of floors, shelves, restrooms, carts, and overall store upkeep
+    label_es: Limpieza y mantenimiento
+    label_en: Store cleanliness
+
+  - name: Staff & Customer Service
+    description: Friendliness, helpfulness, knowledge, and attitude of employees across the store
+    label_es: Atención del personal
+    label_en: Staff & service
+
+  - name: Checkout & Waiting Time
+    description: Speed of checkout lines, self-checkout experience, and overall waiting time at registers
+    label_es: Cajas y tiempos de espera
+    label_en: Checkout speed
+
+  - name: Price & Value for Money
+    description: Perceived pricing, deals, promotions, and overall value relative to quality
+    label_es: Precio y valor
+    label_en: Price & value
+
+  - name: Store Layout & Shopping Experience
+    description: Ease of navigation, store organization, signage, and overall shopping comfort
+    label_es: Layout y experiencia de compra
+    label_en: Store layout & experience
+
+  - name: Prepared Food & In-Store Dining
+    description: Quality, variety, and experience of ready-to-eat meals, hot bar, bakery, and deli sections
+    label_es: Comida preparada y secciones internas
+    label_en: Prepared food & deli
+
+  - name: Location, Parking & Accessibility
+    description: Parking availability, store access, location convenience, and crowd management
+    label_es: Ubicación, estacionamiento y acceso
+    label_en: Location & parking
+
+  - name: Digital & Omnichannel Experience
+    description: Online ordering, delivery, pickup, app usability, and order accuracy
+    label_es: Experiencia digital
+    label_en: Digital experience
+
+  - name: Overall Experience
+    description: Holistic impression when no single aspect dominates the review
+    label_es: Experiencia general
+    label_en: Overall experience

@@ -1,0 +1,17 @@
+slug: wegmans
+business_name: Wegmans Hanover NJ
+industry: supermarkets
+target: Wegmans Hanover NJ
+language: en
+
+places:
+  - business_name: Wegmans Hanover NJ
+    url: "https://www.google.com/maps/place/Wegmans/@39.9275916,-80.3479653,6z/data=!4m6!3m5!1s0x89c3a7962c4c1b19:0x76d8debe1fdfc91b!8m2!3d40.838254!4d-74.437357!16s%2Fg%2F11dzzlnzxl?entry=ttu&g_ep=EgoyMDI2MDUwNi4wIKXMDSoASAFQAw%3D%3D"
+    role: target
+  - business_name: Wegmans Chesapeake VA
+    url: "https://www.google.com/maps/place/Wegmans/@39.9275916,-80.3479653,6z/data=!4m6!3m5!1s0x89ba9575f433cf2d:0xe601574607ad5a0e!8m2!3d36.843485!4d-76.13972!16s%2Fg%2F11f3zt2z_l?entry=ttu&g_ep=EgoyMDI2MDUwNi4wIKXMDSoASAFQAw%3D%3D"
+    role: competitor
+
+branding:
+  primary_color: "#1a1a2e"
+  logo: null

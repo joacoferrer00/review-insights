@@ -77,7 +77,13 @@ def fetch_reviews(
     saved_paths: list[Path] = []
 
     for item in client.dataset(run["defaultDatasetId"]).iterate_items():
-        item_pid = _extract_place_id(item.get("url", "") or item.get("placeUrl", ""))
+        # inputStartUrl is the original URL we passed, which always contains the hex place ID.
+        # item["url"] uses a search-style URL (query_place_id=ChIJ...) that our regex can't parse.
+        item_pid = _extract_place_id(
+            item.get("inputStartUrl", "")
+            or item.get("url", "")
+            or item.get("placeUrl", "")
+        )
         place_name = (
             place_id_to_name.get(item_pid)
             or item.get("title", "unknown")
