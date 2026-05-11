@@ -1,0 +1,134 @@
+# ── Estilo de escritura ───────────────────────────────────────────────────────
+style_note: "Neutral LATAM, professional but conversational"
+
+# ── Fecha y período ───────────────────────────────────────────────────────────
+period_default: "últimos meses"
+date_format: "%d/%m/%Y"
+
+# ── PDF — Portada ─────────────────────────────────────────────────────────────
+subtitle_line1: "Análisis de reseñas de clientes"
+subtitle_line2: "Informe ejecutivo"
+label_period: "Período analizado:"
+label_date: "Fecha del informe:"
+label_prepared_by: "Preparado por: Review Insights"
+
+# ── PDF — Resumen ejecutivo ───────────────────────────────────────────────────
+section_summary: "Resumen ejecutivo"
+kpi_reviews: "reseñas analizadas"
+kpi_rating: "calificación promedio"
+kpi_positive: "menciones positivas"
+kpi_negative: "menciones negativas"
+section_context: "Contexto"
+section_findings: "Principales hallazgos"
+section_recommendations: "Recomendaciones"
+section_next_step: "Próximo paso prioritario"
+
+# ── PDF — Charts ──────────────────────────────────────────────────────────────
+section_distribution: "Distribución de la experiencia"
+chart_sentiment: "Sentimiento de menciones"
+chart_topics: "Temas más mencionados"
+
+# ── PDF — Hallazgos priorizados ───────────────────────────────────────────────
+section_findings_ranked: "Hallazgos priorizados"
+findings_ranked_intro: "Todos los temas detectados, ordenados por prioridad (frecuencia × urgencia × impacto negativo)."
+col_num: "#"
+col_topic: "Tema"
+col_title: "Título"
+col_mentions: "Menciones"
+col_pct_neg: "% Neg."
+col_priority: "Prioridad"
+badge_high: "Alta"
+badge_medium: "Media"
+badge_low: "Baja"
+
+# ── PDF — Benchmark ───────────────────────────────────────────────────────────
+section_benchmark: "Posición vs. competidores"
+col_business: "Negocio"
+col_reviews: "Reseñas"
+col_avg_rating: "Rating promedio"
+col_pct_positive: "% Positivo"
+col_pct_negative: "% Negativo"
+col_high_urgency: "Urgencias altas"
+
+# ── PDF — Plan de acción ──────────────────────────────────────────────────────
+section_action_plan: "Plan de acción"
+action_plan_intro: "Recomendaciones concretas por tema, ordenadas por prioridad."
+col_recommended_action: "Acción recomendada"
+cta_heading: "¿Qué sigue?"
+cta_intro: "Este informe es el punto de partida. Con el <strong>Paquete de Seguimiento</strong> podés:"
+cta_bullet1: "Recibir actualizaciones mensuales del análisis con nuevas reseñas"
+cta_bullet2: "Trackear si las acciones tomadas movieron los números"
+cta_bullet3: "Comparar tu evolución contra el mercado de forma continua"
+cta_contact_label: "Contacto:"
+qr_heading: "Dashboard interactivo"
+qr_caption: "Escaneá para explorar los datos en vivo"
+footer_page: "Página {n}"
+
+# ── Dashboard — Sidebar ───────────────────────────────────────────────────────
+sidebar_subtitle: "Análisis de reseñas"
+label_business_select: "Negocio analizado"
+label_data_through: "Datos hasta:"
+label_total_reviews: "Total reseñas:"
+
+# ── Dashboard — Tabs ──────────────────────────────────────────────────────────
+tab_summary: "📈 Resumen"
+tab_issues: "🔍 Problemas"
+tab_benchmark: "⚖️ Benchmark"
+tab_action_plan: "🎯 Plan de acción"
+tab_data: "📥 Datos"
+
+# ── Dashboard — Tab 1: Resumen ────────────────────────────────────────────────
+header_summary: "Resumen ejecutivo"
+metric_avg_rating: "Rating promedio"
+metric_total_reviews: "Total reseñas"
+metric_positive: "Sentiment positivo"
+metric_high_urgency: "Urgencias altas"
+chart_sentiment_dist: "Distribución de sentiment"
+chart_top_topics: "Temas más mencionados"
+
+# ── Dashboard — Tab 2: Problemas ─────────────────────────────────────────────
+header_issues: "Desglose por tema"
+header_urgency_dist: "Distribución de urgencia"
+header_negative_quotes: "Citas negativas destacadas"
+
+# ── Dashboard — Tab 3: Benchmark ─────────────────────────────────────────────
+header_benchmark: "Benchmark entre negocios"
+caption_benchmark: "Negocio destacado en azul:"
+chart_avg_rating_bench: "Rating promedio"
+chart_sentiment_dist_bench: "Distribución de sentiment"
+header_topic_heatmap: "Frecuencia de temas por negocio (menciones)"
+
+# ── Dashboard — Tab 4: Plan de acción ────────────────────────────────────────
+header_action_plan: "Plan de acción"
+label_priority: "Prioridad"
+label_recommendation_arrow: "→ Recomendación:"
+caption_priority_score: "Score prioridad = menciones × urgencia × % negativo. Cuanto más alto, más impacto tiene resolver ese issue."
+col_urgency_avg: "Urgencia prom."
+col_priority_score: "Score prioridad"
+
+# ── Dashboard — Tab 5: Datos ──────────────────────────────────────────────────
+header_data: "Reseñas clasificadas"
+filter_business: "Negocio"
+filter_sentiment: "Sentiment"
+filter_urgency: "Urgencia"
+col_rating: "Rating"
+col_date: "Fecha"
+col_quote: "Cita"
+col_full_review: "Reseña completa"
+rows_caption: "{n:,} filas"
+download_button: "⬇️ Descargar como Excel"
+
+# ── Etiquetas de sentiment y urgencia ─────────────────────────────────────────
+label_positive: "Positivo"
+label_neutral: "Neutral"
+label_negative: "Negativo"
+label_high: "Alta"
+label_medium: "Media"
+label_low: "Baja"
+
+# ── Etiquetas de ejes de gráficos ─────────────────────────────────────────────
+chart_label_mentions: "Menciones"
+chart_label_pct_mentions: "% menciones"
+chart_label_avg_rating: "Rating promedio"
+chart_label_urgency: "Urgencia"
+chart_label_pct_neg: "% Neg."

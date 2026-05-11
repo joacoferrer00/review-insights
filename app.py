@@ -27,6 +27,7 @@ st.set_page_config(
 # ── Client config ────────────────────────────────────────────────────────────
 
 from review_insights.config import load_client_config, load_topic_labels
+from review_insights.i18n import load_strings
 from review_insights.reporting.dashboard import (
     chart_rating_benchmark,
     chart_sentiment_benchmark,
@@ -51,7 +52,8 @@ except FileNotFoundError as e:
     st.error(str(e))
     st.stop()
 
-topic_labels = load_topic_labels(cfg.taxonomy_path)
+strings = load_strings(cfg.language)
+topic_labels = load_topic_labels(cfg.taxonomy_path, cfg.language)
 
 # ── Brand color derivation ───────────────────────────────────────────────────
 
@@ -242,7 +244,7 @@ def get_data():
     return (
         load_aggregated(cfg.aggregated_path),
         load_insights(cfg.enriched_path, cfg.insights_path, topic_labels),
-        load_classified(cfg.classified_path, topic_labels),
+        load_classified(cfg.classified_path, topic_labels, strings),
     )
 
 agg, insights, classified = get_data()
@@ -252,14 +254,14 @@ businesses = agg.business_name.tolist()
 
 with st.sidebar:
     st.title("📊 Review Intelligence")
-    st.caption(f"Análisis de reseñas — {cfg.business_name}")
+    st.caption(f"{strings['sidebar_subtitle']} — {cfg.business_name}")
     st.divider()
     default_idx = businesses.index(cfg.target) if cfg.target in businesses else 0
-    selected = st.selectbox("Negocio analizado", businesses, index=default_idx)
+    selected = st.selectbox(strings["label_business_select"], businesses, index=default_idx)
     st.divider()
     last_date = classified["date_parsed"].dropna().max()
-    st.caption(f"Datos hasta: **{last_date.strftime('%b %Y') if hasattr(last_date, 'strftime') else last_date}**")
-    st.caption(f"Total reseñas: **{len(classified.drop_duplicates('review_id'))}**")
+    st.caption(f"{strings['label_data_through']} **{last_date.strftime('%b %Y') if hasattr(last_date, 'strftime') else last_date}**")
+    st.caption(f"{strings['label_total_reviews']} **{len(classified.drop_duplicates('review_id'))}**")
 
 row = agg[agg.business_name == selected].iloc[0]
 
@@ -276,74 +278,75 @@ def metric_card(label: str, value: str) -> str:
 # ── Tabs ────────────────────────────────────────────────────────────────────
 
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "📈 Resumen", "🔍 Problemas", "⚖️ Benchmark", "🎯 Plan de acción", "📥 Datos"
+    strings["tab_summary"], strings["tab_issues"], strings["tab_benchmark"],
+    strings["tab_action_plan"], strings["tab_data"],
 ])
 
 # ── Tab 1: Resumen ejecutivo ─────────────────────────────────────────────────
 
 with tab1:
-    st.subheader(f"Resumen ejecutivo — {selected}")
+    st.subheader(f"{strings['header_summary']} — {selected}")
 
     c1, c2, c3, c4 = st.columns(4)
-    c1.markdown(metric_card("Rating promedio", f"{row.avg_rating:.1f} ⭐"), unsafe_allow_html=True)
-    c2.markdown(metric_card("Total reseñas", str(int(row.total_reviews))), unsafe_allow_html=True)
-    c3.markdown(metric_card("Sentiment positivo", f"{row.pct_positive:.0f}%"), unsafe_allow_html=True)
-    c4.markdown(metric_card("Urgencias altas", str(int(row.high_urgency_count))), unsafe_allow_html=True)
+    c1.markdown(metric_card(strings["metric_avg_rating"], f"{row.avg_rating:.1f} ⭐"), unsafe_allow_html=True)
+    c2.markdown(metric_card(strings["metric_total_reviews"], str(int(row.total_reviews))), unsafe_allow_html=True)
+    c3.markdown(metric_card(strings["metric_positive"], f"{row.pct_positive:.0f}%"), unsafe_allow_html=True)
+    c4.markdown(metric_card(strings["metric_high_urgency"], str(int(row.high_urgency_count))), unsafe_allow_html=True)
 
     st.divider()
     col_a, col_b = st.columns(2)
     with col_a:
-        st.markdown("**Distribución de sentiment**")
-        st.plotly_chart(chart_sentiment_pie(row, _CHART_LAYOUT_EXTRAS), use_container_width=True, config=_PLOTLY_CONFIG)
+        st.markdown(f"**{strings['chart_sentiment_dist']}**")
+        st.plotly_chart(chart_sentiment_pie(row, _CHART_LAYOUT_EXTRAS, strings), use_container_width=True, config=_PLOTLY_CONFIG)
     with col_b:
-        st.markdown("**Temas más mencionados**")
-        st.plotly_chart(chart_top_topics(insights, selected, _CHART_LAYOUT_EXTRAS), use_container_width=True, config=_PLOTLY_CONFIG)
+        st.markdown(f"**{strings['chart_top_topics']}**")
+        st.plotly_chart(chart_top_topics(insights, selected, _CHART_LAYOUT_EXTRAS, strings), use_container_width=True, config=_PLOTLY_CONFIG)
 
 # ── Tab 2: Desglose de problemas ─────────────────────────────────────────────
 
 with tab2:
-    st.subheader(f"Desglose por tema — {selected}")
-    st.plotly_chart(chart_topic_sentiment(classified, selected, _CHART_LAYOUT_EXTRAS), use_container_width=True, config=_PLOTLY_CONFIG)
+    st.subheader(f"{strings['header_issues']} — {selected}")
+    st.plotly_chart(chart_topic_sentiment(classified, selected, _CHART_LAYOUT_EXTRAS, strings), use_container_width=True, config=_PLOTLY_CONFIG)
 
     st.divider()
     col_a, col_b = st.columns([1, 2])
 
     with col_a:
-        st.markdown("**Distribución de urgencia**")
-        st.plotly_chart(chart_urgency(classified, selected, _CHART_LAYOUT_EXTRAS), use_container_width=True, config=_PLOTLY_CONFIG)
+        st.markdown(f"**{strings['header_urgency_dist']}**")
+        st.plotly_chart(chart_urgency(classified, selected, _CHART_LAYOUT_EXTRAS, strings), use_container_width=True, config=_PLOTLY_CONFIG)
 
     with col_b:
-        st.markdown("**Citas negativas destacadas**")
+        st.markdown(f"**{strings['header_negative_quotes']}**")
         neg = classified[
             (classified.business_name == selected)
-            & (classified.sentiment == "Negativo")
+            & (classified.sentiment == strings["label_negative"])
             & (classified.text_reference.notna())
         ][["main_topic", "urgency", "stars", "text_reference"]].copy()
-        neg.columns = ["Tema", "Urgencia", "⭐", "Cita"]
+        neg.columns = [strings["col_topic"], strings["filter_urgency"], "⭐", strings["col_quote"]]
         st.dataframe(neg.head(15), use_container_width=True, hide_index=True)
 
 # ── Tab 3: Benchmark ─────────────────────────────────────────────────────────
 
 with tab3:
-    st.subheader("Benchmark entre negocios")
-    st.caption(f"Negocio destacado en azul: {selected}")
+    st.subheader(strings["header_benchmark"])
+    st.caption(f"{strings['caption_benchmark']} {selected}")
 
     col_a, col_b = st.columns(2)
     with col_a:
-        st.markdown("**Rating promedio**")
-        st.plotly_chart(chart_rating_benchmark(agg, _CHART_LAYOUT_EXTRAS), use_container_width=True, config=_PLOTLY_CONFIG)
+        st.markdown(f"**{strings['chart_avg_rating_bench']}**")
+        st.plotly_chart(chart_rating_benchmark(agg, _CHART_LAYOUT_EXTRAS, strings), use_container_width=True, config=_PLOTLY_CONFIG)
     with col_b:
-        st.markdown("**Distribución de sentiment**")
-        st.plotly_chart(chart_sentiment_benchmark(agg, _CHART_LAYOUT_EXTRAS), use_container_width=True, config=_PLOTLY_CONFIG)
+        st.markdown(f"**{strings['chart_sentiment_dist_bench']}**")
+        st.plotly_chart(chart_sentiment_benchmark(agg, _CHART_LAYOUT_EXTRAS, strings), use_container_width=True, config=_PLOTLY_CONFIG)
 
     st.divider()
-    st.markdown("**Frecuencia de temas por negocio** (menciones)")
+    st.markdown(f"**{strings['header_topic_heatmap']}**")
     st.plotly_chart(chart_topic_heatmap(insights, _CHART_LAYOUT_EXTRAS), use_container_width=True, config=_PLOTLY_CONFIG)
 
 # ── Tab 4: Plan de acción ─────────────────────────────────────────────────────
 
 with tab4:
-    st.subheader(f"Plan de acción — {selected}")
+    st.subheader(f"{strings['header_action_plan']} — {selected}")
 
     biz_insights = (
         insights[insights.business_name == selected]
@@ -368,45 +371,42 @@ with tab4:
                         f'<div style="color:#c49a3c;font-family:\'DM Mono\',monospace;font-size:1.6rem;font-weight:600;line-height:1.1">'
                         f'{round(row["priority_score"], 1)}</div>'
                         f'<div style="color:#c49a3c;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em">'
-                        f'Prioridad</div></div>',
+                        f'{strings["label_priority"]}</div></div>',
                         unsafe_allow_html=True,
                     )
                 st.markdown(row["description"])
-                st.markdown(f"**→ Recomendación:** {row['recommendation']}")
+                st.markdown(f"**{strings['label_recommendation_arrow']}** {row['recommendation']}")
     else:
         cols_show = ["main_topic", "mention_count", "pct_negative", "avg_urgency_score", "priority_score"]
         rename = {
-            "main_topic": "Tema",
-            "mention_count": "Menciones",
-            "pct_negative": "% Negativo",
-            "avg_urgency_score": "Urgencia prom.",
-            "priority_score": "Score prioridad",
+            "main_topic": strings["col_topic"],
+            "mention_count": strings["chart_label_mentions"],
+            "pct_negative": strings["col_pct_neg"],
+            "avg_urgency_score": strings["col_urgency_avg"],
+            "priority_score": strings["col_priority_score"],
         }
         display = biz_insights[cols_show].rename(columns=rename)
-        display["% Negativo"] = display["% Negativo"].apply(lambda x: f"{x:.0f}%")
-        display["Score prioridad"] = display["Score prioridad"].round(1)
+        display[strings["col_pct_neg"]] = display[strings["col_pct_neg"]].apply(lambda x: f"{x:.0f}%")
+        display[strings["col_priority_score"]] = display[strings["col_priority_score"]].round(1)
         st.dataframe(display, use_container_width=True)
 
-    st.caption("Score prioridad = menciones × urgencia × % negativo. Cuanto más alto, más impacto tiene resolver ese issue.")
+    st.caption(strings["caption_priority_score"])
 
 # ── Tab 5: Datos / Descarga ───────────────────────────────────────────────────
 
 with tab5:
-    st.subheader("Reseñas clasificadas")
+    st.subheader(strings["header_data"])
+
+    sent_options = [strings["label_positive"], strings["label_neutral"], strings["label_negative"]]
+    urg_options = [strings["label_high"], strings["label_medium"], strings["label_low"]]
 
     col_f1, col_f2, col_f3 = st.columns(3)
     with col_f1:
-        biz_filter = st.multiselect("Negocio", businesses, default=[selected])
+        biz_filter = st.multiselect(strings["filter_business"], businesses, default=[selected])
     with col_f2:
-        sent_filter = st.multiselect(
-            "Sentiment", ["Positivo", "Neutral", "Negativo"],
-            default=["Positivo", "Neutral", "Negativo"],
-        )
+        sent_filter = st.multiselect(strings["filter_sentiment"], sent_options, default=sent_options)
     with col_f3:
-        urg_filter = st.multiselect(
-            "Urgencia", ["Alta", "Media", "Baja"],
-            default=["Alta", "Media", "Baja"],
-        )
+        urg_filter = st.multiselect(strings["filter_urgency"], urg_options, default=urg_options)
 
     active_biz = biz_filter if biz_filter else businesses
     filtered = classified[
@@ -420,9 +420,14 @@ with tab5:
         "sentiment", "urgency", "text_reference", "clean_text",
     ]
     rename_cols = {
-        "business_name": "Negocio", "stars": "Rating", "date_parsed": "Fecha",
-        "main_topic": "Tema", "sentiment": "Sentiment", "urgency": "Urgencia",
-        "text_reference": "Cita", "clean_text": "Reseña completa",
+        "business_name": strings["filter_business"],
+        "stars": strings["col_rating"],
+        "date_parsed": strings["col_date"],
+        "main_topic": strings["col_topic"],
+        "sentiment": strings["filter_sentiment"],
+        "urgency": strings["filter_urgency"],
+        "text_reference": strings["col_quote"],
+        "clean_text": strings["col_full_review"],
     }
 
     st.dataframe(
@@ -430,12 +435,12 @@ with tab5:
         use_container_width=True,
         hide_index=True,
     )
-    st.caption(f"{len(filtered):,} filas")
+    st.caption(strings["rows_caption"].format(n=len(filtered)))
 
     buffer = io.BytesIO()
     filtered[display_cols].rename(columns=rename_cols).to_excel(buffer, index=False, engine="openpyxl")
     st.download_button(
-        label="⬇️ Descargar como Excel",
+        label=strings["download_button"],
         data=buffer.getvalue(),
         file_name=f"reviews_{selected.replace(' ', '_')}.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

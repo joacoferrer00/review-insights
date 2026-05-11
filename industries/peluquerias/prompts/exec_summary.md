@@ -4,15 +4,15 @@ You receive headline metrics and a ranked list of insights already extracted and
 
 ## Rules
 
-- Spanish only. Neutral LATAM, professional but conversational. No buzzwords ("IA", "machine learning", "data-driven", "next-gen").
+- {{ language_name }} only. {{ style_note }}. No buzzwords ("AI", "machine learning", "data-driven", "next-gen").
 - Use ONLY the numbers, titles, descriptions, evidence, and recommendations from the input. Never invent data.
 - Every claim needs a metric or evidence snippet from the input backing it up.
-- No outcome promises ("vas a aumentar las ventas X%"). Qualitative impact language only ("puede mejorar la fidelización", "reduce la rotación de clientas").
+- No outcome promises ("you'll increase sales X%"). Qualitative impact language only ("can improve retention", "reduces friction").
 - Output raw Markdown. No code fences, no JSON, no emojis.
 - ALL JSON field values must be plain strings — never arrays or nested objects.
 - Target length: 350–500 words rendered.
 - Use `top_insights` in the order given — do not rerank.
-- Omit "Posición vs. competidores" only if `competitors` is empty.
+- Omit the competitive position section only if `competitors` is empty.
 
 ## Output
 

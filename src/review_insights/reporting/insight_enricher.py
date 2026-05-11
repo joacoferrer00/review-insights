@@ -7,8 +7,10 @@ import time
 from pathlib import Path
 
 import pandas as pd
+from jinja2 import Template
 from pydantic import BaseModel, field_validator
 
+from review_insights.i18n import LANG_NAMES
 from review_insights.llm.base import LLMProvider, LLMRequest
 
 logger = logging.getLogger(__name__)
@@ -41,6 +43,7 @@ def enrich_insights(
     provider: LLMProvider,
     prompt_path: Path,
     output_path: Path,
+    language: str = "es",
 ) -> pd.DataFrame:
     """Enrich each row in insights_df with title, description, evidence, recommendation.
 
@@ -48,7 +51,8 @@ def enrich_insights(
     mention_count, pct_negative, or priority_score changed since the last run.
     Rows with no changes keep their existing enrichment. New topics are enriched fresh.
     """
-    system_prompt = prompt_path.read_text(encoding="utf-8")
+    lang_name = LANG_NAMES.get(language, "Spanish")
+    system_prompt = Template(prompt_path.read_text(encoding="utf-8")).render(language_name=lang_name)
 
     if output_path.exists():
         existing = pd.read_csv(output_path)

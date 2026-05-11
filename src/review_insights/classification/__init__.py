@@ -16,7 +16,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
+from jinja2 import Template
 
+from review_insights.i18n import LANG_NAMES
 from review_insights.llm.base import LLMProvider, LLMRequest
 
 from .schemas import BatchClassificationResult, ClassificationResult
@@ -47,6 +49,7 @@ def classify_reviews(
     provider: LLMProvider,
     prompt_path: Path,
     topics: frozenset[str],
+    language: str = "es",
 ) -> pd.DataFrame:
     """Classify all reviews with text using an LLM provider.
 
@@ -79,7 +82,10 @@ def classify_reviews(
         model_used.
     """
     topic_list = "\n".join(f"- {t}" for t in sorted(topics))
-    system_prompt = prompt_path.read_text(encoding="utf-8").replace("{{topics}}", topic_list)
+    lang_name = LANG_NAMES.get(language, "Spanish")
+    system_prompt = Template(prompt_path.read_text(encoding="utf-8")).render(
+        topics=topic_list, language_name=lang_name
+    )
     df = df.copy()
 
     for col in _CLASSIFICATION_COLS:

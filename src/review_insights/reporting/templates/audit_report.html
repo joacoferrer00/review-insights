@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ language }}">
 <head>
   <meta charset="UTF-8" />
   <title>Review Intelligence Audit — {{ business }}</title>
@@ -14,12 +14,12 @@
   <div>
     <div class="business-badge">{{ business }}</div>
     <h1>Review Intelligence<br>Audit</h1>
-    <p class="subtitle">Análisis de reseñas de clientes<br>Informe ejecutivo</p>
+    <p class="subtitle">{{ t.subtitle_line1 }}<br>{{ t.subtitle_line2 }}</p>
   </div>
   <div class="meta-block">
-    <p>Período analizado: {{ period }}</p>
-    <p>Fecha del informe: {{ date }}</p>
-    <p>Preparado por: Review Insights</p>
+    <p>{{ t.label_period }} {{ period }}</p>
+    <p>{{ t.label_date }} {{ date }}</p>
+    <p>{{ t.label_prepared_by }}</p>
   </div>
 </div>
 
@@ -28,56 +28,56 @@
 ══════════════════════════════════════════════════ -->
 <div class="page">
 
-  <h2>Resumen ejecutivo</h2>
+  <h2>{{ t.section_summary }}</h2>
   <hr class="divider" />
 
   <!-- KPI strip -->
   <div class="kpi-strip">
     <div class="kpi-card">
       <div class="value">{{ total_reviews }}</div>
-      <span class="label">reseñas analizadas</span>
+      <span class="label">{{ t.kpi_reviews }}</span>
     </div>
     <div class="kpi-card">
       <div class="value">{{ avg_rating }} ★</div>
-      <span class="label">calificación promedio</span>
+      <span class="label">{{ t.kpi_rating }}</span>
     </div>
     <div class="kpi-card">
       <div class="value" style="color: var(--ok);">{{ pct_positive }}%</div>
-      <span class="label">menciones positivas</span>
+      <span class="label">{{ t.kpi_positive }}</span>
     </div>
     <div class="kpi-card">
       <div class="value" style="color: var(--danger);">{{ pct_negative }}%</div>
-      <span class="label">menciones negativas</span>
+      <span class="label">{{ t.kpi_negative }}</span>
     </div>
   </div>
 
   <!-- Contexto -->
   <div class="section">
-    <h3>Contexto</h3>
+    <h3>{{ t.section_context }}</h3>
     <div class="context-text">{{ summary.context | markdown }}</div>
   </div>
 
   <!-- Hallazgos -->
   <div class="section">
-    <h3>Principales hallazgos</h3>
+    <h3>{{ t.section_findings }}</h3>
     <div class="findings-text">{{ summary.findings | markdown }}</div>
   </div>
 
   <!-- Recomendaciones -->
   <div class="section">
-    <h3>Recomendaciones</h3>
+    <h3>{{ t.section_recommendations }}</h3>
     <div class="reco-text">{{ summary.recommendations | markdown }}</div>
   </div>
 
   <!-- Próximo paso -->
   <div class="section">
-    <h3>Próximo paso prioritario</h3>
+    <h3>{{ t.section_next_step }}</h3>
     <div class="next-step-text">{{ summary.next_step | markdown }}</div>
   </div>
 
   <div class="footer">
     <span>{{ business }} — Review Intelligence Audit</span>
-    <span>Página 2</span>
+    <span>{{ t.footer_page.format(n=2) }}</span>
   </div>
 </div>
 
@@ -86,21 +86,21 @@
 ══════════════════════════════════════════════════ -->
 <div class="page">
 
-  <h2>Distribución de la experiencia</h2>
+  <h2>{{ t.section_distribution }}</h2>
   <hr class="divider" />
 
   <div class="chart-box" style="margin-bottom: 16px;">
-    <div class="chart-title">Sentimiento de menciones</div>
+    <div class="chart-title">{{ t.chart_sentiment }}</div>
     <img src="{{ charts.pie }}" alt="Sentiment pie chart" />
   </div>
   <div class="chart-box">
-    <div class="chart-title">Temas más mencionados</div>
+    <div class="chart-title">{{ t.chart_topics }}</div>
     <img src="{{ charts.topics }}" alt="Top topics bar chart" />
   </div>
 
   <div class="footer">
     <span>{{ business }} — Review Intelligence Audit</span>
-    <span>Página 3</span>
+    <span>{{ t.footer_page.format(n=3) }}</span>
   </div>
 </div>
 
@@ -109,21 +109,21 @@
 ══════════════════════════════════════════════════ -->
 <div class="page">
 
-  <h2>Hallazgos priorizados</h2>
+  <h2>{{ t.section_findings_ranked }}</h2>
   <hr class="divider" />
   <p class="muted" style="margin-bottom:12px;">
-    Todos los temas detectados, ordenados por prioridad (frecuencia × urgencia × impacto negativo).
+    {{ t.findings_ranked_intro }}
   </p>
 
   <table>
     <thead>
       <tr>
-        <th>#</th>
-        <th>Tema</th>
-        <th>Título</th>
-        <th>Menciones</th>
-        <th>% Neg.</th>
-        <th>Prioridad</th>
+        <th>{{ t.col_num }}</th>
+        <th>{{ t.col_topic }}</th>
+        <th>{{ t.col_title }}</th>
+        <th>{{ t.col_mentions }}</th>
+        <th>{{ t.col_pct_neg }}</th>
+        <th>{{ t.col_priority }}</th>
       </tr>
     </thead>
     <tbody>
@@ -136,11 +136,11 @@
         <td>{{ row.pct_negative }}%</td>
         <td>
           {% if row.priority_score >= 8 %}
-            <span class="badge badge-high">Alta</span>
+            <span class="badge badge-high">{{ t.badge_high }}</span>
           {% elif row.priority_score >= 3 %}
-            <span class="badge badge-medium">Media</span>
+            <span class="badge badge-medium">{{ t.badge_medium }}</span>
           {% else %}
-            <span class="badge badge-low">Baja</span>
+            <span class="badge badge-low">{{ t.badge_low }}</span>
           {% endif %}
         </td>
       </tr>
@@ -150,7 +150,7 @@
 
   <div class="footer">
     <span>{{ business }} — Review Intelligence Audit</span>
-    <span>Página 4</span>
+    <span>{{ t.footer_page.format(n=4) }}</span>
   </div>
 </div>
 
@@ -159,7 +159,7 @@
 ══════════════════════════════════════════════════ -->
 <div class="page">
 
-  <h2>Posición vs. competidores</h2>
+  <h2>{{ t.section_benchmark }}</h2>
   <hr class="divider" />
   {% if summary.competitive_position %}
   <div style="margin-bottom: 16px;">{{ summary.competitive_position | markdown }}</div>
@@ -168,12 +168,12 @@
   <table>
     <thead>
       <tr>
-        <th>Negocio</th>
-        <th>Reseñas</th>
-        <th>Rating promedio</th>
-        <th>% Positivo</th>
-        <th>% Negativo</th>
-        <th>Urgencias altas</th>
+        <th>{{ t.col_business }}</th>
+        <th>{{ t.col_reviews }}</th>
+        <th>{{ t.col_avg_rating }}</th>
+        <th>{{ t.col_pct_positive }}</th>
+        <th>{{ t.col_pct_negative }}</th>
+        <th>{{ t.col_high_urgency }}</th>
       </tr>
     </thead>
     <tbody>
@@ -192,7 +192,7 @@
 
   <div class="footer">
     <span>{{ business }} — Review Intelligence Audit</span>
-    <span>Página 5</span>
+    <span>{{ t.footer_page.format(n=5) }}</span>
   </div>
 </div>
 
@@ -201,18 +201,18 @@
 ══════════════════════════════════════════════════ -->
 <div class="page">
 
-  <h2>Plan de acción</h2>
+  <h2>{{ t.section_action_plan }}</h2>
   <hr class="divider" />
   <p class="muted" style="margin-bottom:12px;">
-    Recomendaciones concretas por tema, ordenadas por prioridad.
+    {{ t.action_plan_intro }}
   </p>
 
   <table>
     <thead>
       <tr>
-        <th>#</th>
-        <th>Tema</th>
-        <th>Acción recomendada</th>
+        <th>{{ t.col_num }}</th>
+        <th>{{ t.col_topic }}</th>
+        <th>{{ t.col_recommended_action }}</th>
       </tr>
     </thead>
     <tbody>
@@ -227,29 +227,29 @@
   </table>
 
   <div class="cta-box">
-    <h3>¿Qué sigue?</h3>
-    <p>Este informe es el punto de partida. Con el <strong>Paquete de Seguimiento</strong> podés:</p>
+    <h3>{{ t.cta_heading }}</h3>
+    <p>{{ t.cta_intro | safe }}</p>
     <ul>
-      <li>Recibir actualizaciones mensuales del análisis con nuevas reseñas</li>
-      <li>Trackear si las acciones tomadas movieron los números</li>
-      <li>Comparar tu evolución contra el mercado de forma continua</li>
+      <li>{{ t.cta_bullet1 }}</li>
+      <li>{{ t.cta_bullet2 }}</li>
+      <li>{{ t.cta_bullet3 }}</li>
     </ul>
     <p style="margin-top:12px;">
-      Contacto: <strong>joacoferrer00@gmail.com</strong>
+      {{ t.cta_contact_label }} <strong>joacoferrer00@gmail.com</strong>
     </p>
   </div>
 
   <div class="qr-block">
     <img src="{{ charts.qr }}" alt="QR dashboard" class="qr-img" />
     <div class="qr-caption">
-      <strong>Dashboard interactivo</strong><br>
-      Escaneá para explorar los datos en vivo
+      <strong>{{ t.qr_heading }}</strong><br>
+      {{ t.qr_caption }}
     </div>
   </div>
 
   <div class="footer">
     <span>{{ business }} — Review Intelligence Audit</span>
-    <span>Página 6</span>
+    <span>{{ t.footer_page.format(n=6) }}</span>
   </div>
 </div>
 

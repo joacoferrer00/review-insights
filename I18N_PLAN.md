@@ -171,15 +171,87 @@ Ninguno.
 
 ## Orden de implementación
 
-1. Capa de config: `language` field, `load_topic_labels(language)`
-2. Módulo i18n: crear `src/review_insights/i18n/` con `__init__.py`, `es.yaml`, `en.yaml`
-3. Parametrizar prompts (find-replace en 9 archivos) + renderizar con Jinja2 en los 3 callers
-4. Taxonomía restaurants: agregar `label_en` a los 10 topics
-5. PDF: parametrizar `audit_report.html` y `report_generator.py`
-6. Dashboard: parametrizar `dashboard.py` y `app.py`
-7. Pipeline: propagar `cfg.language` en `run_pipeline.py`
-8. Verificación end-to-end
-9. Commit
+1. ✅ Capa de config: `language` field, `load_topic_labels(language)`
+2. ✅ Módulo i18n: crear `src/review_insights/i18n/` con `__init__.py`, `es.yaml`, `en.yaml`
+3. ✅ Parametrizar prompts (find-replace en 9 archivos) + renderizar con Jinja2 en los 3 callers
+4. ✅ Taxonomía restaurants: agregar `label_en` a los 10 topics
+5. ✅ PDF: parametrizar `audit_report.html` y `report_generator.py`
+6. ✅ Dashboard: parametrizar `dashboard.py` y `app.py`
+7. ✅ Pipeline: propagar `cfg.language` en `run_pipeline.py`
+8. ✅ Verificación end-to-end
+9. ✅ Commit
+
+### Estado al inicio de sesión nueva (continuar desde Paso 5)
+
+**Archivos creados:**
+- `src/review_insights/i18n/__init__.py` — `load_strings(language)` + `LANG_NAMES = {"es": "Spanish", "en": "English"}`
+- `src/review_insights/i18n/es.yaml` — ~60 keys para PDF + dashboard
+- `src/review_insights/i18n/en.yaml` — traducción 1:1
+
+**Archivos modificados:**
+- `src/review_insights/config.py` — `ClientConfig.language: str = "es"`, `load_client_config()` lee `raw.get("language", "es")`, `load_topic_labels(path, language="es")` con fallback chain
+- `src/review_insights/classification/__init__.py` — `classify_reviews()` acepta `language="es"`, renderiza prompt con `Template(...).render(topics=..., language_name=...)`
+- `src/review_insights/reporting/insight_enricher.py` — `enrich_insights()` acepta `language="es"`, renderiza prompt con Jinja2
+- `src/review_insights/reporting/report_generator.py` — `generate_executive_summary()` acepta `language="es"`, renderiza exec_summary prompt con Jinja2; importa `LANG_NAMES`
+- `industries/restaurants/taxonomy.yaml` — 10 topics tienen `label_en`
+- `industries/restaurants/prompts/enrichment.md` — `Spanish` → `{{ language_name }}` (4 ocurrencias)
+- `industries/restaurants/prompts/exec_summary.md` — `Spanish only` → `{{ language_name }} only`
+- `industries/gym/prompts/enrichment.md` — ídem
+- `industries/gym/prompts/exec_summary.md` — ídem
+- `industries/peluquerias/prompts/enrichment.md` — ídem
+- `industries/peluquerias/prompts/exec_summary.md` — ídem
+
+**Pendiente — Paso 5: PDF**
+
+Tocar `src/review_insights/reporting/report_generator.py`:
+- `render_pdf()` acepta `language: str = "es"`
+- Dentro: `from review_insights.i18n import load_strings; strings = load_strings(language)`
+- Formato de fecha: `date_fmt = strings["date_format"]; date=date.today().strftime(date_fmt)`
+- Reemplazar `period="últimos meses"` por `strings["period_default"]`
+- Pasar `t=strings, language=language` al `template.render()`
+- Pasar `language=language` a `generate_executive_summary(..., language=language)`
+
+Tocar `src/review_insights/reporting/templates/audit_report.html`:
+- `<html lang="es">` → `<html lang="{{ language }}">`
+- Portada: `Análisis de reseñas de clientes` → `{{ t.subtitle_line1 }}`, `Informe ejecutivo` → `{{ t.subtitle_line2 }}`, `Período analizado:` → `{{ t.label_period }}`, `Fecha del informe:` → `{{ t.label_date }}`, `Preparado por: Review Insights` → `{{ t.label_prepared_by }}`
+- Pág 2: `Resumen ejecutivo` → `{{ t.section_summary }}`, `reseñas analizadas` → `{{ t.kpi_reviews }}`, `calificación promedio` → `{{ t.kpi_rating }}`, `menciones positivas` → `{{ t.kpi_positive }}`, `menciones negativas` → `{{ t.kpi_negative }}`, `Contexto` → `{{ t.section_context }}`, `Principales hallazgos` → `{{ t.section_findings }}`, `Recomendaciones` → `{{ t.section_recommendations }}`, `Próximo paso prioritario` → `{{ t.section_next_step }}`
+- Pág 3: `Distribución de la experiencia` → `{{ t.section_distribution }}`, `Sentimiento de menciones` → `{{ t.chart_sentiment }}`, `Temas más mencionados` → `{{ t.chart_topics }}`
+- Pág 4: `Hallazgos priorizados` → `{{ t.section_findings_ranked }}`, intro → `{{ t.findings_ranked_intro }}`, columnas `#/Tema/Título/Menciones/% Neg./Prioridad` → `{{ t.col_num }}/{{ t.col_topic }}/{{ t.col_title }}/{{ t.col_mentions }}/{{ t.col_pct_neg }}/{{ t.col_priority }}`, badges `Alta/Media/Baja` → `{{ t.badge_high }}/{{ t.badge_medium }}/{{ t.badge_low }}`
+- Pág 5: `Posición vs. competidores` → `{{ t.section_benchmark }}`, columnas → `{{ t.col_business }}/{{ t.col_reviews }}/{{ t.col_avg_rating }}/{{ t.col_pct_positive }}/{{ t.col_pct_negative }}/{{ t.col_high_urgency }}`
+- Pág 6: `Plan de acción` → `{{ t.section_action_plan }}`, intro → `{{ t.action_plan_intro }}`, `Acción recomendada` → `{{ t.col_recommended_action }}`, CTA → `{{ t.cta_heading }}/{{ t.cta_intro | safe }}/bullets/{{ t.cta_contact_label }}`, QR → `{{ t.qr_heading }}/{{ t.qr_caption }}`
+- Footers: `Página N` → `{{ t.footer_page.format(n=N) }}` (N = 2..6)
+
+**Pendiente — Paso 6: Dashboard**
+
+Tocar `src/review_insights/reporting/dashboard.py`:
+- `SENTIMENT_COLORS`: cambiar keys de `"Positivo"/"Neutral"/"Negativo"` a `"positive"/"neutral"/"negative"` (los colores no cambian)
+- `URGENCY_COLORS`: cambiar keys de `"Alta"/"Media"/"Baja"` a `"high"/"medium"/"low"`
+- Eliminar `SENTIMENT_ES` y `URGENCY_ES`
+- Agregar función `sentiment_display_map(strings)` → `{"positive": strings["label_positive"], ...}`
+- Agregar función `urgency_display_map(strings)` → `{"high": strings["label_high"], ...}`
+- Todas las funciones `chart_*` agregan param `strings: dict`; reemplazar labels hardcodeados en español por `strings["chart_label_*"]`
+- En `chart_sentiment_benchmark`: reemplazar `("Positivo", ...), ("Neutral", ...), ("Negativo", ...)` por construir desde `sentiment_display_map(strings)`
+- En `load_classified`: reemplazar `.map(SENTIMENT_ES)` y `.map(URGENCY_ES)` por `.map(sentiment_display_map(strings))` — necesita recibir `strings` o hacerlo en app.py post-carga
+
+Tocar `app.py`:
+- Importar `load_strings` de `review_insights.i18n`
+- Después de resolver cfg: `strings = load_strings(cfg.language)`
+- `load_topic_labels(cfg.taxonomy_path)` → `load_topic_labels(cfg.taxonomy_path, cfg.language)`
+- `load_classified` necesita strings para el mapeo sentiment/urgency — pasar `strings` o mapear después de cargar
+- Reemplazar cada string hardcodeado por `strings["<key>"]` (ver keys en `es.yaml`)
+- Tabs: `st.tabs([strings["tab_summary"], strings["tab_issues"], ...])` 
+- Sidebar: `st.caption(f"{strings['sidebar_subtitle']} — {cfg.business_name}")`, `st.selectbox(strings["label_business_select"], ...)`, etc.
+- Filtros Tab 5: opciones de sentiment/urgency construidas desde `strings["label_positive"]` etc.
+- Columnas de rename construidas desde strings dict
+- `download_button label=strings["download_button"]`
+
+**Pendiente — Paso 7: Pipeline**
+
+Tocar `run_pipeline.py`:
+- `load_topic_labels(cfg.taxonomy_path)` → `load_topic_labels(cfg.taxonomy_path, cfg.language)`
+- `classify_reviews(..., language=cfg.language)`
+- `enrich_insights(..., language=cfg.language)`
+- `render_pdf(..., language=cfg.language)`
 
 ---
 

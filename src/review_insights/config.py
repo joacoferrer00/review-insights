@@ -29,6 +29,7 @@ class ClientConfig:
     target: str
     places: list[PlaceConfig]
     branding: BrandingConfig
+    language: str = "es"
 
     # resolved paths
     client_dir: Path = field(init=False)
@@ -111,6 +112,7 @@ def load_client_config(slug: str) -> ClientConfig:
         target=raw["target"],
         places=places,
         branding=branding,
+        language=raw.get("language", "es"),
     )
 
 
@@ -119,7 +121,10 @@ def load_taxonomy(taxonomy_path: Path) -> frozenset[str]:
     return frozenset(t["name"] for t in raw["topics"])
 
 
-def load_topic_labels(taxonomy_path: Path) -> dict[str, str]:
-    """Return {topic_name: label_es} for dashboard display. Falls back to name if label_es absent."""
+def load_topic_labels(taxonomy_path: Path, language: str = "es") -> dict[str, str]:
+    """Return {topic_name: label_<language>} for display. Falls back to label_es, then name."""
     raw = yaml.safe_load(taxonomy_path.read_text(encoding="utf-8"))
-    return {t["name"]: t.get("label_es", t["name"]) for t in raw["topics"]}
+    return {
+        t["name"]: t.get(f"label_{language}", t.get("label_es", t["name"]))
+        for t in raw["topics"]
+    }

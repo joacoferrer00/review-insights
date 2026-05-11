@@ -170,7 +170,7 @@ def main() -> None:
             logger.info("Step 3/6 — classification (%d new reviews, LLM: %s)", len(new_clean), model)
             t = time.time()
             provider = GeminiProvider(api_key=api_key, model=model)
-            new_classified = classify_reviews(new_clean, provider, cfg.classification_prompt_path, topics)
+            new_classified = classify_reviews(new_clean, provider, cfg.classification_prompt_path, topics, language=cfg.language)
             classified_df = pd.concat([existing_classified, new_classified], ignore_index=True)
             cfg.classified_path.parent.mkdir(parents=True, exist_ok=True)
             classified_df.to_csv(cfg.classified_path, index=False)
@@ -180,7 +180,7 @@ def main() -> None:
         logger.info("Step 3/6 — classification (LLM: %s)", model)
         t = time.time()
         provider = GeminiProvider(api_key=api_key, model=model)
-        classified_df = classify_reviews(clean_df, provider, cfg.classification_prompt_path, topics)
+        classified_df = classify_reviews(clean_df, provider, cfg.classification_prompt_path, topics, language=cfg.language)
         cfg.classified_path.parent.mkdir(parents=True, exist_ok=True)
         classified_df.to_csv(cfg.classified_path, index=False)
         had_new_data = True
@@ -209,6 +209,7 @@ def main() -> None:
         provider,
         cfg.enrichment_prompt_path,
         cfg.enriched_path,
+        language=cfg.language,
     )
     logger.info("enrichment done (%.1fs)", time.time() - t)
 
@@ -229,7 +230,8 @@ def main() -> None:
             provider=provider,
             prompt_path=cfg.exec_summary_prompt_path,
             outputs_dir=cfg.outputs_dir / "reports",
-            topic_labels=load_topic_labels(cfg.taxonomy_path),
+            topic_labels=load_topic_labels(cfg.taxonomy_path, cfg.language),
+            language=cfg.language,
         )
         logger.info("PDF done (%.1fs)", time.time() - t)
 

@@ -1,0 +1,134 @@
+# ── Writing style ─────────────────────────────────────────────────────────────
+style_note: "Professional, clear, for a US business audience"
+
+# ── Date and period ───────────────────────────────────────────────────────────
+period_default: "recent months"
+date_format: "%B %d, %Y"
+
+# ── PDF — Cover ───────────────────────────────────────────────────────────────
+subtitle_line1: "Customer review analysis"
+subtitle_line2: "Executive report"
+label_period: "Analysis period:"
+label_date: "Report date:"
+label_prepared_by: "Prepared by: Review Insights"
+
+# ── PDF — Executive summary ───────────────────────────────────────────────────
+section_summary: "Executive summary"
+kpi_reviews: "reviews analyzed"
+kpi_rating: "average rating"
+kpi_positive: "positive mentions"
+kpi_negative: "negative mentions"
+section_context: "Context"
+section_findings: "Key findings"
+section_recommendations: "Recommendations"
+section_next_step: "Priority next step"
+
+# ── PDF — Charts ──────────────────────────────────────────────────────────────
+section_distribution: "Experience distribution"
+chart_sentiment: "Mention sentiment"
+chart_topics: "Most mentioned topics"
+
+# ── PDF — Prioritized findings ────────────────────────────────────────────────
+section_findings_ranked: "Prioritized findings"
+findings_ranked_intro: "All detected topics, ranked by priority (frequency × urgency × negative impact)."
+col_num: "#"
+col_topic: "Topic"
+col_title: "Title"
+col_mentions: "Mentions"
+col_pct_neg: "% Neg."
+col_priority: "Priority"
+badge_high: "High"
+badge_medium: "Medium"
+badge_low: "Low"
+
+# ── PDF — Benchmark ───────────────────────────────────────────────────────────
+section_benchmark: "Competitive position"
+col_business: "Business"
+col_reviews: "Reviews"
+col_avg_rating: "Avg. rating"
+col_pct_positive: "% Positive"
+col_pct_negative: "% Negative"
+col_high_urgency: "High urgency"
+
+# ── PDF — Action plan ─────────────────────────────────────────────────────────
+section_action_plan: "Action plan"
+action_plan_intro: "Concrete recommendations by topic, ranked by priority."
+col_recommended_action: "Recommended action"
+cta_heading: "What's next?"
+cta_intro: "This report is the starting point. With the <strong>Follow-up Package</strong> you can:"
+cta_bullet1: "Receive monthly analysis updates with new reviews"
+cta_bullet2: "Track whether actions taken moved the numbers"
+cta_bullet3: "Benchmark your progress against the market continuously"
+cta_contact_label: "Contact:"
+qr_heading: "Interactive dashboard"
+qr_caption: "Scan to explore live data"
+footer_page: "Page {n}"
+
+# ── Dashboard — Sidebar ───────────────────────────────────────────────────────
+sidebar_subtitle: "Review analysis"
+label_business_select: "Business"
+label_data_through: "Data through:"
+label_total_reviews: "Total reviews:"
+
+# ── Dashboard — Tabs ──────────────────────────────────────────────────────────
+tab_summary: "📈 Summary"
+tab_issues: "🔍 Issues"
+tab_benchmark: "⚖️ Benchmark"
+tab_action_plan: "🎯 Action plan"
+tab_data: "📥 Data"
+
+# ── Dashboard — Tab 1: Summary ────────────────────────────────────────────────
+header_summary: "Executive summary"
+metric_avg_rating: "Average rating"
+metric_total_reviews: "Total reviews"
+metric_positive: "Positive sentiment"
+metric_high_urgency: "High urgency"
+chart_sentiment_dist: "Sentiment distribution"
+chart_top_topics: "Top mentioned topics"
+
+# ── Dashboard — Tab 2: Issues ─────────────────────────────────────────────────
+header_issues: "Breakdown by topic"
+header_urgency_dist: "Urgency distribution"
+header_negative_quotes: "Top negative quotes"
+
+# ── Dashboard — Tab 3: Benchmark ─────────────────────────────────────────────
+header_benchmark: "Business benchmark"
+caption_benchmark: "Business highlighted in blue:"
+chart_avg_rating_bench: "Average rating"
+chart_sentiment_dist_bench: "Sentiment distribution"
+header_topic_heatmap: "Topic frequency by business (mentions)"
+
+# ── Dashboard — Tab 4: Action plan ───────────────────────────────────────────
+header_action_plan: "Action plan"
+label_priority: "Priority"
+label_recommendation_arrow: "→ Recommendation:"
+caption_priority_score: "Priority score = mentions × urgency × % negative. The higher the score, the more impact resolving it has."
+col_urgency_avg: "Avg. urgency"
+col_priority_score: "Priority score"
+
+# ── Dashboard — Tab 5: Data ───────────────────────────────────────────────────
+header_data: "Classified reviews"
+filter_business: "Business"
+filter_sentiment: "Sentiment"
+filter_urgency: "Urgency"
+col_rating: "Rating"
+col_date: "Date"
+col_quote: "Quote"
+col_full_review: "Full review"
+rows_caption: "{n:,} rows"
+download_button: "⬇️ Download as Excel"
+
+# ── Sentiment and urgency display labels ──────────────────────────────────────
+label_positive: "Positive"
+label_neutral: "Neutral"
+label_negative: "Negative"
+label_high: "High"
+label_medium: "Medium"
+label_low: "Low"
+
+# ── Chart axis labels ─────────────────────────────────────────────────────────
+chart_label_mentions: "Mentions"
+chart_label_pct_mentions: "% mentions"
+chart_label_avg_rating: "Avg. rating"
+chart_label_urgency: "Urgency"
+chart_label_pct_neg: "% Neg."

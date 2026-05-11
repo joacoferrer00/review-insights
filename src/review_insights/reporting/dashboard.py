@@ -8,13 +8,26 @@ import plotly.express as px
 
 # ── Color palette ────────────────────────────────────────────────────────────
 
-SENTIMENT_COLORS = {"Positivo": "#008450", "Neutral": "#7a8499", "Negativo": "#B81D13"}
-URGENCY_COLORS = {"Alta": "#B81D13", "Media": "#c49a3c", "Baja": "#008450"}
+SENTIMENT_COLORS = {"positive": "#008450", "neutral": "#7a8499", "negative": "#B81D13"}
+URGENCY_COLORS = {"high": "#B81D13", "medium": "#c49a3c", "low": "#008450"}
 HIGHLIGHT_COLOR = "#4a90d9"
 HEATMAP_SCALE = ["#131929", "#1a2f52", "#25467a", "#3666a8", "#4a90d9"]
 
-SENTIMENT_ES = {"positive": "Positivo", "neutral": "Neutral", "negative": "Negativo"}
-URGENCY_ES = {"high": "Alta", "medium": "Media", "low": "Baja"}
+
+def sentiment_display_map(strings: dict) -> dict[str, str]:
+    return {
+        "positive": strings["label_positive"],
+        "neutral": strings["label_neutral"],
+        "negative": strings["label_negative"],
+    }
+
+
+def urgency_display_map(strings: dict) -> dict[str, str]:
+    return {
+        "high": strings["label_high"],
+        "medium": strings["label_medium"],
+        "low": strings["label_low"],
+    }
 
 # ── Data loaders ─────────────────────────────────────────────────────────────
 
@@ -31,21 +44,23 @@ def load_insights(enriched_path: Path, base_path: Path, topic_labels: dict[str, 
     return df
 
 
-def load_classified(path: Path, topic_labels: dict[str, str]) -> pd.DataFrame:
+def load_classified(path: Path, topic_labels: dict[str, str], strings: dict | None = None) -> pd.DataFrame:
     df = pd.read_csv(path)
     df["date_parsed"] = pd.to_datetime(df["date_parsed"], errors="coerce")
     df["is_actionable"] = df["is_actionable"].astype(str).str.lower().map({"true": True, "false": False})
     df["main_topic"] = df["main_topic"].map(topic_labels).fillna(df["main_topic"])
-    df["sentiment"] = df["sentiment"].map(SENTIMENT_ES).fillna(df["sentiment"])
-    df["urgency"] = df["urgency"].map(URGENCY_ES).fillna(df["urgency"])
+    if strings:
+        df["sentiment"] = df["sentiment"].map(sentiment_display_map(strings)).fillna(df["sentiment"])
+        df["urgency"] = df["urgency"].map(urgency_display_map(strings)).fillna(df["urgency"])
     return df
 
 
 # ── Tab 1: Resumen ───────────────────────────────────────────────────────────
 
 
-def chart_sentiment_pie(row: pd.Series, layout_extras: dict | None = None) -> go.Figure:
-    labels = list(SENTIMENT_COLORS.keys())
+def chart_sentiment_pie(row: pd.Series, layout_extras: dict | None = None, strings: dict | None = None) -> go.Figure:
+    display = sentiment_display_map(strings) if strings else {"positive": "positive", "neutral": "neutral", "negative": "negative"}
+    labels = [display["positive"], display["neutral"], display["negative"]]
     values = [row.pct_positive, row.pct_neutral, row.pct_negative]
     fig = go.Figure(go.Pie(
         labels=labels,
@@ -60,12 +75,14 @@ def chart_sentiment_pie(row: pd.Series, layout_extras: dict | None = None) -> go
     return fig
 
 
-def chart_top_topics(insights_df: pd.DataFrame, business: str, layout_extras: dict | None = None) -> go.Figure:
+def chart_top_topics(insights_df: pd.DataFrame, business: str, layout_extras: dict | None = None, strings: dict | None = None) -> go.Figure:
     df = (
         insights_df[insights_df.business_name == business]
         .nlargest(6, "mention_count")
         .sort_values("mention_count")
     )
+    mentions_label = strings["chart_label_mentions"] if strings else "Menciones"
+    pct_neg_label = strings["chart_label_pct_neg"] if strings else "% Neg."
     fig = px.bar(
         df,
         x="mention_count",
@@ -73,7 +90,7 @@ def chart_top_topics(insights_df: pd.DataFrame, business: str, layout_extras: di
         orientation="h",
         color="pct_negative",
         color_continuous_scale=["#008450", "#c49a3c", "#B81D13"],
-        labels={"mention_count": "Menciones", "main_topic": "", "pct_negative": "% Neg."},
+        labels={"mention_count": mentions_label, "main_topic": "", "pct_negative": pct_neg_label},
     )
     fig.update_layout(
         margin=dict(t=10, b=10, l=10, r=10),
@@ -89,22 +106,25 @@ def chart_top_topics(insights_df: pd.DataFrame, business: str, layout_extras: di
 # ── Tab 2: Desglose de problemas ─────────────────────────────────────────────
 
 
-def chart_topic_sentiment(classified_df: pd.DataFrame, business: str, layout_extras: dict | None = None) -> go.Figure:
+def chart_topic_sentiment(classified_df: pd.DataFrame, business: str, layout_extras: dict | None = None, strings: dict | None = None) -> go.Figure:
     df = classified_df[
         (classified_df.business_name == business)
         & (classified_df.main_topic.notna())
         & (classified_df.sentiment.notna())
     ]
     counts = df.groupby(["main_topic", "sentiment"]).size().reset_index(name="count")
+    display = sentiment_display_map(strings) if strings else {"positive": "positive", "neutral": "neutral", "negative": "negative"}
+    display_color_map = {display[k]: v for k, v in SENTIMENT_COLORS.items()}
+    mentions_label = strings["chart_label_mentions"] if strings else "Menciones"
     fig = px.bar(
         counts,
         x="main_topic",
         y="count",
         color="sentiment",
-        color_discrete_map=SENTIMENT_COLORS,
+        color_discrete_map=display_color_map,
         barmode="stack",
-        labels={"count": "Menciones", "main_topic": "", "sentiment": "Sentiment"},
-        category_orders={"sentiment": list(SENTIMENT_COLORS.keys())},
+        labels={"count": mentions_label, "main_topic": "", "sentiment": "Sentiment"},
+        category_orders={"sentiment": list(display.values())},
     )
     fig.update_layout(
         margin=dict(t=10, b=50, l=10, r=10),
@@ -117,23 +137,27 @@ def chart_topic_sentiment(classified_df: pd.DataFrame, business: str, layout_ext
     return fig
 
 
-def chart_urgency(classified_df: pd.DataFrame, business: str, layout_extras: dict | None = None) -> go.Figure:
+def chart_urgency(classified_df: pd.DataFrame, business: str, layout_extras: dict | None = None, strings: dict | None = None) -> go.Figure:
     df = classified_df[
         (classified_df.business_name == business) & (classified_df.urgency.notna())
     ]
-    order = list(URGENCY_COLORS.keys())
+    display = urgency_display_map(strings) if strings else {"high": "high", "medium": "medium", "low": "low"}
+    display_order = [display["high"], display["medium"], display["low"]]
+    display_color_map = {display[k]: v for k, v in URGENCY_COLORS.items()}
     counts = (
-        df.groupby("urgency").size().reindex(order, fill_value=0).reset_index(name="count")
+        df.groupby("urgency").size().reindex(display_order, fill_value=0).reset_index(name="count")
     )
     counts.columns = ["urgency", "count"]
+    mentions_label = strings["chart_label_mentions"] if strings else "Menciones"
+    urgency_label = strings["chart_label_urgency"] if strings else "Urgencia"
     fig = px.bar(
         counts,
         x="urgency",
         y="count",
         color="urgency",
-        color_discrete_map=URGENCY_COLORS,
-        labels={"count": "Menciones", "urgency": "Urgencia"},
-        category_orders={"urgency": order},
+        color_discrete_map=display_color_map,
+        labels={"count": mentions_label, "urgency": urgency_label},
+        category_orders={"urgency": display_order},
     )
     fig.update_layout(showlegend=False, margin=dict(t=10, b=10, l=10, r=10), height=260)
     if layout_extras:
@@ -144,8 +168,9 @@ def chart_urgency(classified_df: pd.DataFrame, business: str, layout_extras: dic
 # ── Tab 3: Benchmark ─────────────────────────────────────────────────────────
 
 
-def chart_rating_benchmark(aggregated_df: pd.DataFrame, layout_extras: dict | None = None) -> go.Figure:
+def chart_rating_benchmark(aggregated_df: pd.DataFrame, layout_extras: dict | None = None, strings: dict | None = None) -> go.Figure:
     df = aggregated_df.sort_values("avg_rating", ascending=True)
+    avg_rating_label = strings["chart_label_avg_rating"] if strings else "Rating promedio"
     fig = go.Figure(go.Bar(
         x=df.avg_rating,
         y=df.business_name,
@@ -155,7 +180,7 @@ def chart_rating_benchmark(aggregated_df: pd.DataFrame, layout_extras: dict | No
         textposition="outside",
     ))
     fig.update_layout(
-        xaxis=dict(range=[0, 5.8], title="Rating promedio"),
+        xaxis=dict(range=[0, 5.8], title=avg_rating_label),
         margin=dict(t=10, b=10, l=10, r=50),
         height=230,
     )
@@ -164,20 +189,22 @@ def chart_rating_benchmark(aggregated_df: pd.DataFrame, layout_extras: dict | No
     return fig
 
 
-def chart_sentiment_benchmark(aggregated_df: pd.DataFrame, layout_extras: dict | None = None) -> go.Figure:
+def chart_sentiment_benchmark(aggregated_df: pd.DataFrame, layout_extras: dict | None = None, strings: dict | None = None) -> go.Figure:
     df = aggregated_df.sort_values("pct_positive", ascending=True)
+    display = sentiment_display_map(strings) if strings else {"positive": "positive", "neutral": "neutral", "negative": "negative"}
+    pct_label = strings["chart_label_pct_mentions"] if strings else "% menciones"
     fig = go.Figure()
-    for label, col in [("Positivo", "pct_positive"), ("Neutral", "pct_neutral"), ("Negativo", "pct_negative")]:
+    for key, col in [("positive", "pct_positive"), ("neutral", "pct_neutral"), ("negative", "pct_negative")]:
         fig.add_trace(go.Bar(
-            name=label, x=df[col], y=df.business_name,
-            orientation="h", marker_color=SENTIMENT_COLORS[label],
+            name=display[key], x=df[col], y=df.business_name,
+            orientation="h", marker_color=SENTIMENT_COLORS[key],
         ))
     fig.update_layout(
         barmode="stack",
         margin=dict(t=10, b=10, l=10, r=10),
         height=230,
         legend=dict(orientation="h", yanchor="bottom", y=1.02),
-        xaxis_title="% menciones",
+        xaxis_title=pct_label,
     )
     if layout_extras:
         fig.update_layout(**layout_extras)

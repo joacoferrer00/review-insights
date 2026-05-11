@@ -13,6 +13,7 @@ import qrcode
 from jinja2 import Environment, FileSystemLoader
 from pydantic import BaseModel, field_validator
 
+from review_insights.i18n import LANG_NAMES, load_strings
 from review_insights.llm.base import LLMProvider, LLMRequest
 from review_insights.reporting.dashboard import (
     chart_sentiment_pie,
@@ -56,13 +57,23 @@ def generate_executive_summary(
     insights_enriched_df: pd.DataFrame,
     provider: LLMProvider,
     prompt_path: Path,
+    language: str = "es",
 ) -> ExecutiveSummary:
     """Call LLM once to produce the executive summary narrative for one business.
 
     Returns a validated ExecutiveSummary. Raises RuntimeError if all retries fail.
     """
-    system_prompt = prompt_path.read_text(encoding="utf-8")
-    user_msg = _build_user_message(business, aggregated_df, insights_enriched_df)
+    from jinja2 import Template
+    _strings = load_strings(language)
+    lang_name = LANG_NAMES.get(language, "Spanish")
+    system_prompt = Template(prompt_path.read_text(encoding="utf-8")).render(
+        language_name=lang_name,
+        style_note=_strings.get("style_note", ""),
+    )
+    user_msg = _build_user_message(
+        business, aggregated_df, insights_enriched_df,
+        period_default=_strings.get("period_default", "recent months"),
+    )
 
     for attempt in range(1, _MAX_RETRIES + 1):
         try:
@@ -84,6 +95,7 @@ def _build_user_message(
     business: str,
     aggregated_df: pd.DataFrame,
     insights_enriched_df: pd.DataFrame,
+    period_default: str = "recent months",
 ) -> str:
     row = aggregated_df[aggregated_df["business_name"] == business].iloc[0]
 
@@ -112,7 +124,7 @@ def _build_user_message(
 
     payload = {
         "business": business,
-        "period": "últimos meses",
+        "period": period_default,
         "total_reviews": int(row["total_reviews"]),
         "avg_rating": float(row["avg_rating"]),
         "pct_positive": float(row["pct_positive"]),
@@ -153,12 +165,14 @@ def render_pdf(
     prompt_path: Path,
     outputs_dir: Path,
     topic_labels: dict[str, str] | None = None,
+    language: str = "es",
 ) -> Path:
     """Render the full audit PDF for one business.
 
     Orchestrates: LLM exec summary → chart PNGs → Jinja2 HTML → Playwright PDF.
     Returns the path to the generated PDF.
     """
+    strings = load_strings(language)
     tmp_dir = outputs_dir.parent / "tmp"
     outputs_dir.mkdir(parents=True, exist_ok=True)
     tmp_dir.mkdir(parents=True, exist_ok=True)
@@ -169,7 +183,7 @@ def render_pdf(
 
     # ── 1. Executive summary (LLM) ───────────────────────────────────────────
     logger.info("Generating executive summary for %s", business)
-    summary = generate_executive_summary(business, aggregated_df, enriched_df, provider, prompt_path)
+    summary = generate_executive_summary(business, aggregated_df, enriched_df, provider, prompt_path, language=language)
 
     # ── 2. Export charts + QR to PNG ─────────────────────────────────────────
     logger.info("Exporting charts for %s", business)
@@ -201,8 +215,8 @@ def render_pdf(
 
     html = template.render(
         business=business,
-        period="últimos meses",
-        date=date.today().strftime("%d/%m/%Y"),
+        period=strings["period_default"],
+        date=date.today().strftime(strings["date_format"]),
         total_reviews=int(biz_row["total_reviews"]),
         avg_rating=float(biz_row["avg_rating"]),
         pct_positive=float(biz_row["pct_positive"]),
@@ -213,6 +227,8 @@ def render_pdf(
         charts={"pie": pie_path.as_uri(), "topics": topics_path.as_uri(), "qr": qr_path.as_uri()},
         dashboard_url=f"{_DASHBOARD_BASE}?client={client_slug}",
         css_path=(_TEMPLATES_DIR / "styles.css").as_uri(),
+        t=strings,
+        language=language,
     )
 
     # ── 5. HTML → PDF via Playwright ─────────────────────────────────────────
