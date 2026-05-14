@@ -387,6 +387,8 @@ hr {{
 
 /* ── Dataframes ── */
 [data-testid="stDataFrame"] {{
+    /* No overflow:hidden — Streamlit's internal GlideDataEditor manages its
+       own scrollbar; wrapping it clips both the scrollbar and rows. */
     border: 1px solid {HAIRLINE};
     border-radius: 0;
     background: {PAPER};
