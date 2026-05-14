@@ -90,7 +90,7 @@ section.main,
 .block-container {{
     background-color: {PAPER} !important;
     padding-top: 2.4rem !important;
-    padding-bottom: 5rem !important;
+    padding-bottom: 10rem !important;
     max-width: 1320px;
 }}
 
@@ -650,7 +650,11 @@ with tab2:
             & (classified.text_reference.notna())
         ][["main_topic", "urgency", "stars", "text_reference"]].copy()
         neg.columns = [strings["col_topic"], strings["filter_urgency"], "★", strings["col_quote"]]
-        st.dataframe(neg.head(15), use_container_width=True, hide_index=True)
+        # height=560 fits all 15 rows without internal scroll. Without it,
+        # GlideDataEditor's canvas paints ~560px in a default 398px container
+        # with overflow:visible — rows bleed past the layout box into the
+        # block-container padding-bottom, defeating the breathing room.
+        st.dataframe(neg.head(15), use_container_width=True, hide_index=True, height=560)
 
 # ── Tab 3: Benchmark ─────────────────────────────────────────────────────────
 
