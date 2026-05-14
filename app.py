@@ -58,7 +58,6 @@ topic_labels = load_topic_labels(cfg.taxonomy_path, cfg.language)
 # ── Design tokens — Editorial Intelligence ──────────────────────────────────
 
 PAPER           = "#F5F1E8"
-SURFACE         = "#EFEAD9"
 BEIGE           = "#ECE6D4"
 INK             = "#0E1116"
 INK_MUTED       = "#5C6470"
@@ -70,7 +69,6 @@ FOREST          = "#3E6E55"
 
 DISPLAY_FONT = "'Fraunces', 'IBM Plex Serif', Georgia, serif"
 BODY_FONT    = "'Hanken Grotesk', system-ui, sans-serif"
-MONO_FONT    = "'IBM Plex Mono', 'JetBrains Mono', monospace"
 
 # ── CSS injection ────────────────────────────────────────────────────────────
 
@@ -307,12 +305,12 @@ hr {{
 }}
 
 /* ── Expand button (subtle, prominent on hover) ── */
-[data-testid="stButton"] {{
+.block-container [data-testid="stButton"] {{
     display: flex !important;
     justify-content: flex-end !important;
     margin-top: 0.2rem;
 }}
-[data-testid="stButton"] button {{
+.block-container [data-testid="stButton"] button {{
     background: {PAPER} !important;
     border: 1px solid {HAIRLINE} !important;
     color: {INK_MUTED} !important;
@@ -329,7 +327,7 @@ hr {{
     display: inline-flex !important;
     align-items: center;
 }}
-[data-testid="stButton"] button p {{
+.block-container [data-testid="stButton"] button p {{
     font-family: {BODY_FONT} !important;
     font-size: 0.62rem !important;
     font-weight: 600 !important;
@@ -339,13 +337,13 @@ hr {{
     margin: 0 !important;
     line-height: 1 !important;
 }}
-[data-testid="stButton"] button:hover {{
+.block-container [data-testid="stButton"] button:hover {{
     opacity: 1;
     color: {PAPER} !important;
     background: {INK} !important;
     border-color: {INK} !important;
 }}
-[data-testid="stButton"] button:hover p {{
+.block-container [data-testid="stButton"] button:hover p {{
     color: {PAPER} !important;
 }}
 
@@ -543,9 +541,10 @@ def section(eyebrow: str, title: str, subtitle: str | None = None) -> None:
     )
 
 
+# Single space: st.dialog requires a non-empty title; space suppresses the visible title bar
 @st.dialog(" ", width="large")
 def _chart_modal() -> None:
-    payload = st.session_state.get("_chart_modal_payload")
+    payload = st.session_state.get("_chart_modal_payload")  # always written immediately before open; one dialog open at a time
     if not payload:
         return
     fig, title = payload
@@ -554,9 +553,9 @@ def _chart_modal() -> None:
         f'<div class="ri-section-title" style="font-size:1.55rem;margin-bottom:1rem">{title}</div>',
         unsafe_allow_html=True,
     )
-    big = copy.deepcopy(fig)
+    big = copy.deepcopy(fig)  # update_layout mutates in place; copy prevents height change leaking to the inline chart
     big.update_layout(height=620, margin=dict(t=20, b=20, l=20, r=20))
-    st.plotly_chart(big, use_container_width=True, config={"displayModeBar": False})
+    st.plotly_chart(big, use_container_width=True, config=_PLOTLY_CONFIG)
 
 
 def chart_frame(title: str, fig, key: str) -> None:
