@@ -239,6 +239,30 @@ button[data-baseweb="tab"][aria-selected="true"] {{
 }}
 [data-baseweb="tab-border"] {{ background-color: transparent !important; }}
 
+/* ── Material Symbols — tonal icon treatment ── */
+[data-testid="stIconMaterial"],
+span[role="img"][translate="no"] {{
+    font-family: 'Material Symbols Rounded', 'Material Symbols Outlined' !important;
+    color: {OCHRE} !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    font-size: 1rem !important;
+    line-height: 1 !important;
+    opacity: 0.9;
+}}
+button[data-baseweb="tab"][aria-selected="true"] span[role="img"][translate="no"] {{
+    color: {OCHRE} !important;
+    opacity: 1;
+}}
+/* Flex container — aligns icon optical-center with uppercase label */
+button[data-baseweb="tab"] [data-testid="stMarkdownContainer"] p,
+button[data-testid="stDownloadButton"] p {{
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.45rem !important;
+    margin: 0 !important;
+}}
+
 /* ── Hairlines ── */
 hr {{
     border-color: {HAIRLINE} !important;

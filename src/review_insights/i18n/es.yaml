@@ -71,11 +71,11 @@ label_data_through: "Datos hasta:"
 label_total_reviews: "Total reseñas:"
 
 # ── Dashboard — Tabs ──────────────────────────────────────────────────────────
-tab_summary: "📈 Resumen"
-tab_issues: "🔍 Problemas"
-tab_benchmark: "⚖️ Benchmark"
-tab_action_plan: "🎯 Plan de acción"
-tab_data: "📥 Datos"
+tab_summary: ":material/trending_up: Resumen"
+tab_issues: ":material/troubleshoot: Problemas"
+tab_benchmark: ":material/balance: Benchmark"
+tab_action_plan: ":material/flag: Plan de acción"
+tab_data: ":material/table_chart: Datos"
 
 # ── Dashboard — Tab 1: Resumen ────────────────────────────────────────────────
 header_summary: "Resumen ejecutivo"
@@ -116,7 +116,7 @@ col_date: "Fecha"
 col_quote: "Cita"
 col_full_review: "Reseña completa"
 rows_caption: "{n:,} filas"
-download_button: "⬇️ Descargar como Excel"
+download_button: ":material/download: Descargar como Excel"
 
 # ── Etiquetas de sentiment y urgencia ─────────────────────────────────────────
 label_positive: "Positivo"
