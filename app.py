@@ -251,7 +251,6 @@ span[role="img"][translate="no"] {{
     opacity: 0.9;
 }}
 button[data-baseweb="tab"][aria-selected="true"] span[role="img"][translate="no"] {{
-    color: {OCHRE} !important;
     opacity: 1;
 }}
 /* Flex container — aligns icon optical-center with uppercase label */
