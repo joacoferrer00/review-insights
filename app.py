@@ -315,8 +315,11 @@ hr {{
     background: {PAPER};
     transition: border-color 220ms ease, box-shadow 220ms ease;
     padding: 0.3rem;
+    overflow: hidden;
 }}
-[data-testid="stPlotlyChart"]:hover {{
+/* Hover handled via the chartbox container — the chart itself has pointer-events:none
+   (the overlay button captures clicks), so its own :hover never fires. */
+[class*="st-key-chartbox_"]:hover [data-testid="stPlotlyChart"] {{
     border-color: {INK};
     box-shadow: 0 12px 32px -20px rgba(14,17,22,0.32);
 }}
@@ -325,49 +328,44 @@ hr {{
     border: none !important;
     padding: 0 !important;
     box-shadow: none !important;
+    overflow: visible !important;
 }}
 
-/* ── Expand button (subtle, prominent on hover) ── */
-.block-container [data-testid="stButton"] {{
-    display: flex !important;
-    justify-content: flex-end !important;
-    margin-top: 0.2rem;
+/* ── Chart click overlay: invisible button covers the inline chart so any click expands ── */
+[class*="st-key-chartbox_"] {{
+    position: relative;
+    cursor: pointer;
 }}
-.block-container [data-testid="stButton"] button {{
-    background: {PAPER} !important;
-    border: 1px solid {HAIRLINE} !important;
-    color: {INK_MUTED} !important;
-    border-radius: 0 !important;
-    padding: 0.36rem 0.85rem !important;
-    min-height: 0 !important;
-    height: auto !important;
-    line-height: 1 !important;
-    opacity: 0.55;
-    transition: opacity 200ms ease, color 200ms ease, border-color 200ms ease, background 200ms ease;
-    width: auto !important;
-    box-shadow: none !important;
-    white-space: nowrap !important;
-    display: inline-flex !important;
-    align-items: center;
+[class*="st-key-chartbox_"] [data-testid="stPlotlyChart"] {{
+    pointer-events: none;
 }}
-.block-container [data-testid="stButton"] button p {{
-    font-family: {BODY_FONT} !important;
-    font-size: 0.62rem !important;
-    font-weight: 600 !important;
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-    white-space: nowrap !important;
+/* The button lives inside an stElementContainer; position THAT element to span the chart.
+   width/height: 100% are required because Streamlit's emotion-cache sets width: fit-content
+   on element containers, which wins over `inset: 0` for absolutely-positioned elements. */
+[class*="st-key-chartbox_"] [class*="st-key-expand_"] {{
+    position: absolute !important;
+    inset: 0 !important;
     margin: 0 !important;
-    line-height: 1 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    z-index: 5;
 }}
-.block-container [data-testid="stButton"] button:hover {{
-    opacity: 1;
-    color: {PAPER} !important;
-    background: {INK} !important;
-    border-color: {INK} !important;
+[class*="st-key-chartbox_"] [class*="st-key-expand_"] [data-testid="stButton"],
+[class*="st-key-chartbox_"] [class*="st-key-expand_"] [data-testid="stButton"] > div {{
+    width: 100% !important;
+    height: 100% !important;
 }}
-.block-container [data-testid="stButton"] button:hover p {{
-    color: {PAPER} !important;
+[class*="st-key-chartbox_"] [class*="st-key-expand_"] button {{
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    opacity: 0 !important;
+    cursor: pointer !important;
+    padding: 0 !important;
 }}
 
 /* ── Dialog (chart fullscreen modal) ── */
@@ -582,15 +580,13 @@ def _chart_modal() -> None:
 
 
 def chart_frame(title: str, fig, key: str) -> None:
-    col_title, col_action = st.columns([6, 1.4], gap="small")
-    with col_title:
-        st.markdown(f'<div class="ri-chart-title">{title}</div>', unsafe_allow_html=True)
-    with col_action:
-        clicked = st.button("↗ Expand", key=f"expand_{key}", help="Open in fullscreen")
+    st.markdown(f'<div class="ri-chart-title">{title}</div>', unsafe_allow_html=True)
+    with st.container(key=f"chartbox_{key}"):
+        st.plotly_chart(fig, use_container_width=True, config=_PLOTLY_CONFIG)
+        clicked = st.button(" ", key=f"expand_{key}")
     if clicked:
         st.session_state["_chart_modal_payload"] = (fig, title)
         _chart_modal()
-    st.plotly_chart(fig, use_container_width=True, config=_PLOTLY_CONFIG)
 
 # ── Tabs ────────────────────────────────────────────────────────────────────
 
