@@ -5,7 +5,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
 
-# Purge stale review_insights modules from Streamlit's module cache on each rerun
+# Purge stale review_insights modules from Streamlit's module cache on each r
 for _key in list(sys.modules.keys()):
     if "review_insights" in _key:
         del sys.modules[_key]
