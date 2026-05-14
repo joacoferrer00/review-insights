@@ -584,6 +584,7 @@ def chart_frame(title: str, fig, key: str) -> None:
     with st.container(key=f"chartbox_{key}"):
         st.plotly_chart(fig, use_container_width=True, config=_PLOTLY_CONFIG)
         clicked = st.button(" ", key=f"expand_{key}")
+
     if clicked:
         st.session_state["_chart_modal_payload"] = (fig, title)
         _chart_modal()
