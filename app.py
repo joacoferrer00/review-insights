@@ -314,8 +314,10 @@ hr {{
     border: 1px solid {HAIRLINE};
     background: {PAPER};
     transition: border-color 220ms ease, box-shadow 220ms ease;
-    padding: 0.3rem;
-    overflow: hidden;
+    /* No padding/no overflow override: Plotly auto-resizes its SVG to the
+       wrapper's clientHeight, so any inner padding causes the SVG to either
+       overflow (visible) or be clipped (hidden). The 1px border alone is the
+       visual frame; chart content has its own internal margins. */
 }}
 /* Hover handled via the chartbox container — the chart itself has pointer-events:none
    (the overlay button captures clicks), so its own :hover never fires. */
@@ -372,6 +374,11 @@ hr {{
 [role="dialog"][aria-modal="true"] {{
     max-width: 94vw !important;
     width: 94vw !important;
+    max-height: calc(100vh - 96px) !important;
+    overflow-y: auto !important;
+    /* Bottom padding gives symmetric breathing room — without it the chart
+       reaches the dialog's bottom edge while the top has the header strip. */
+    padding-bottom: 2rem !important;
     background: {PAPER} !important;
     border: 1px solid {HAIRLINE_STRONG} !important;
     border-radius: 0 !important;
@@ -382,7 +389,6 @@ hr {{
 [data-testid="stDataFrame"] {{
     border: 1px solid {HAIRLINE};
     border-radius: 0;
-    overflow: hidden;
     background: {PAPER};
 }}
 [data-testid="stDataFrame"] [role="row"] {{ background: transparent !important; }}
@@ -417,7 +423,7 @@ hr {{
     border: none !important;
     border-top: 1px solid {HAIRLINE} !important;
     border-radius: 0 !important;
-    padding: 1.6rem 0 0.4rem 0 !important;
+    padding: 1.6rem 0 1.4rem 0 !important;
     margin: 0 !important;
     background: transparent !important;
 }}
@@ -575,7 +581,7 @@ def _chart_modal() -> None:
         unsafe_allow_html=True,
     )
     big = copy.deepcopy(fig)  # update_layout mutates in place; copy prevents height change leaking to the inline chart
-    big.update_layout(height=620, margin=dict(t=20, b=20, l=20, r=20))
+    big.update_layout(height=480, margin=dict(t=20, b=20, l=20, r=20))
     st.plotly_chart(big, use_container_width=True, config=_PLOTLY_CONFIG)
 
 
