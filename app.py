@@ -73,7 +73,8 @@ BODY_FONT    = "'Hanken Grotesk', system-ui, sans-serif"
 # Single source of truth for rounded-container corners. Change here and every
 # surface that opts in (selectbox, chart frame, modal, dataframe, download
 # button, multiselect tags) updates in lockstep. Tabs and the action-card
-# wrapper intentionally stay square — see the comments at their CSS rules.
+# wrapper deliberately keep border-radius: 0 — the tab underline animation
+# reads better with sharp corners.
 RADIUS = "10px"
 
 # ── CSS injection ────────────────────────────────────────────────────────────
