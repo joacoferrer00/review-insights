@@ -445,18 +445,21 @@ hr {{
     align-items: center !important;
     justify-content: center !important;
     gap: 0.5rem !important;
-    transition: background-color 180ms ease, box-shadow 180ms ease;
+    transition: background-color 180ms ease, box-shadow 180ms ease !important;
 }}
 [data-testid="stDownloadButton"] button:hover {{
     background: {ACCENT_DEEP} !important;
     color: {PAPER} !important;
-    box-shadow: 0 8px 22px -10px rgba(161,74,60,0.55);
+    box-shadow: 0 8px 22px -10px rgba({int(ACCENT[1:3],16)},{int(ACCENT[3:5],16)},{int(ACCENT[5:7],16)},0.55);
 }}
 /* Icon inside the download button. The parent <p> is now a real flex container
    (see the rule above) — align-items:center on the <p> + matching height on
    icon and label is what does the centering. We just normalize the icon span
    itself (color override, kill the default vertical-align:bottom from Material
-   Symbols so it doesn't fight the flex centering). */
+   Symbols so it doesn't fight the flex centering).
+   Dual selectors: span[role="img"][translate="no"] matches current Streamlit icon
+   rendering; [data-testid="stIconMaterial"] is the data-testid fallback in case
+   Streamlit changes the element structure. Both are needed — do not prune one. */
 [data-testid="stDownloadButton"] button span[role="img"][translate="no"],
 [data-testid="stDownloadButton"] button [data-testid="stIconMaterial"] {{
     color: {PAPER} !important;
@@ -468,20 +471,19 @@ hr {{
     vertical-align: middle !important;
     transform: none !important;
 }}
-/* Explicit color on the inner <p>/markdown wrapper — Streamlit wraps the
-   button label in [data-testid="stMarkdownContainer"] > p, and a global rule
-   on that selector (~line 166) pins color:INK directly on the <p>, beating
-   the color inherited from the button. Without this rule the text reads dark
-   on the terracotta background and is barely legible. */
+/* stMarkdownContainer inside the download button needs two things:
+   (1) Color override — a global rule on [data-testid="stMarkdownContainer"] p
+       (~line 166) pins color:INK directly on the <p>, beating the color
+       inherited from the button. Without the explicit PAPER rule below the
+       text reads dark on the terracotta background and is barely legible.
+   (2) Flex centering — without display:flex the inline-flex <p> baseline-
+       aligns to the container's 25.6px line-box, putting the icon+text ~3px
+       above the button's optical center (verified via DevTools measurement). */
 [data-testid="stDownloadButton"] button p,
 [data-testid="stDownloadButton"] button [data-testid="stMarkdownContainer"] p,
 [data-testid="stDownloadButton"] button [data-testid="stMarkdownContainer"] {{
     color: {PAPER} !important;
 }}
-/* Make the markdown container itself a flex box so the inner <p> is centered
-   by its box, not by its baseline. Without this the inline-flex <p> baseline-
-   aligns to the container's 25.6px line-box, which puts the icon+text ~3px
-   above the button's optical center (verified via DevTools measurement). */
 [data-testid="stDownloadButton"] button [data-testid="stMarkdownContainer"] {{
     display: flex !important;
     align-items: center !important;
