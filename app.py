@@ -495,6 +495,10 @@ hr {{
     border-left: 2px solid {OCHRE};
     padding: 0.1rem 0 0.1rem 0.9rem;
     margin-top: 0.4rem;
+    /* Last child of the action card — this margin gives breathing room against
+       the container's bottom border. Owned-class spacing (vs. padding on
+       Streamlit's container) survives testid renames across versions. */
+    margin-bottom: 0.5rem;
     font-family: {BODY_FONT};
     color: {INK};
     line-height: 1.55;
