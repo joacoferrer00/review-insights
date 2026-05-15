@@ -32,9 +32,9 @@ from review_insights.reporting.dashboard import (
     chart_rating_benchmark,
     chart_sentiment_benchmark,
     chart_sentiment_pie,
+    chart_top_topics,
     chart_topic_heatmap,
     chart_topic_sentiment,
-    chart_top_topics,
     chart_urgency,
     load_aggregated,
     load_classified,
@@ -84,6 +84,14 @@ BODY_FONT    = "'Hanken Grotesk', system-ui, sans-serif"
 # reads better with sharp corners.
 RADIUS = "10px"
 
+
+def ink_rgba(alpha: float) -> str:
+    """`rgba(...)` string derived from the INK token. Used inside the CSS f-string
+    so opacity-tinted INK values track the token instead of duplicating its hex
+    expansion in seven places — change INK once and every overlay/shadow updates."""
+    return f"rgba({int(INK[1:3], 16)}, {int(INK[3:5], 16)}, {int(INK[5:7], 16)}, {alpha})"
+
+
 # ── CSS injection ────────────────────────────────────────────────────────────
 
 st.markdown(f"""
@@ -130,7 +138,7 @@ section[data-testid="stSidebar"],
     margin: 0.2rem 0 0.4rem 0 !important;
 }}
 [data-testid="stSidebar"] p {{
-    color: rgba(14,17,22,0.7) !important;
+    color: {ink_rgba(0.7)} !important;
     font-size: 0.84rem !important;
     line-height: 1.45;
 }}
@@ -139,15 +147,15 @@ section[data-testid="stSidebar"],
     font-size: 0.66rem !important;
     text-transform: uppercase;
     letter-spacing: 0.18em;
-    color: rgba(14,17,22,0.5) !important;
+    color: {ink_rgba(0.5)} !important;
 }}
 [data-testid="stSidebar"] hr {{
-    border-color: rgba(14,17,22,0.18) !important;
+    border-color: {ink_rgba(0.18)} !important;
     margin: 1.2rem 0 !important;
 }}
 [data-testid="stSidebar"] [data-baseweb="select"] > div {{
-    background-color: rgba(14,17,22,0.04) !important;
-    border: 1px solid rgba(14,17,22,0.22) !important;
+    background-color: {ink_rgba(0.04)} !important;
+    border: 1px solid {ink_rgba(0.22)} !important;
     border-radius: {RADIUS} !important;
 }}
 [data-testid="stSidebar"] [data-baseweb="select"] span,
@@ -346,7 +354,7 @@ hr {{
    (the overlay button captures clicks), so its own :hover never fires. */
 [class*="st-key-chartbox_"]:hover [data-testid="stPlotlyChart"] {{
     border-color: {INK};
-    box-shadow: 0 12px 32px -20px rgba(14,17,22,0.32);
+    box-shadow: 0 12px 32px -20px {ink_rgba(0.32)};
 }}
 [role="dialog"] [data-testid="stPlotlyChart"],
 [role="dialog"] [data-testid="stPlotlyChart"]:hover {{
@@ -413,7 +421,7 @@ hr {{
     background: {PAPER} !important;
     border: 1px solid {HAIRLINE_STRONG} !important;
     border-radius: {RADIUS} !important;
-    box-shadow: 0 40px 80px -20px rgba(14,17,22,0.45) !important;
+    box-shadow: 0 40px 80px -20px {ink_rgba(0.45)} !important;
 }}
 
 /* ── Dataframes ── */
