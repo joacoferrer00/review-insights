@@ -64,8 +64,15 @@ INK_MUTED       = "#5C6470"
 HAIRLINE        = "#D9D2C0"
 HAIRLINE_STRONG = "#B8AE92"
 ACCENT          = "#A14A3C"
+ACCENT_DEEP     = "#8A3E32"
 OCHRE           = "#C49A3C"
 FOREST          = "#3E6E55"
+
+# Filter-chip background — derived as the midpoint between HAIRLINE and
+# HAIRLINE_STRONG so it stays in the same warm-earth family. Used for
+# multiselect tags so a stack of active filters reads as state (soft cream
+# pills) rather than competing with the download CTA (solid terracotta).
+CHIP_BG         = "#DDD4BD"
 
 DISPLAY_FONT = "'Fraunces', 'IBM Plex Serif', Georgia, serif"
 BODY_FONT    = "'Hanken Grotesk', system-ui, sans-serif"
@@ -260,13 +267,19 @@ span[role="img"][translate="no"] {{
 button[data-baseweb="tab"][aria-selected="true"] span[role="img"][translate="no"] {{
     opacity: 1;
 }}
-/* Flex container — aligns icon optical-center with uppercase label */
+/* Flex container — aligns icon optical-center with uppercase label.
+   NOTE: the download button's <p> sits inside [data-testid="stDownloadButton"]
+   (the wrapper), but the <button> itself has data-testid="stBaseButton-secondary".
+   An earlier version used button[data-testid="stDownloadButton"] which matched
+   nothing — the icon then fell back to vertical-align:bottom inside a block-
+   level <p> and visibly sat off-center. Use the descendant form below. */
 button[data-baseweb="tab"] [data-testid="stMarkdownContainer"] p,
-button[data-testid="stDownloadButton"] p {{
+[data-testid="stDownloadButton"] button p {{
     display: inline-flex !important;
     align-items: center !important;
     gap: 0.45rem !important;
     margin: 0 !important;
+    line-height: 1 !important;
 }}
 
 /* ── Hairlines ── */
@@ -413,9 +426,12 @@ hr {{
 }}
 [data-testid="stDataFrame"] [role="row"] {{ background: transparent !important; }}
 
-/* ── Download button ── */
+/* ── Download button — primary CTA in terracotta. display:flex + justify:center
+   on the button itself is belt-and-suspenders for icon/label alignment: the
+   inline-flex rule on the inner `p` (line ~265) handles current Streamlit, this
+   centers the contents even if Streamlit stops wrapping the label in <p>. ── */
 [data-testid="stDownloadButton"] button {{
-    background: {INK} !important;
+    background: {ACCENT} !important;
     color: {PAPER} !important;
     border: none !important;
     border-radius: {RADIUS} !important;
@@ -425,18 +441,73 @@ hr {{
     letter-spacing: 0.14em;
     font-size: 0.7rem !important;
     padding: 0.75rem 1.5rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+    transition: background-color 180ms ease, box-shadow 180ms ease;
 }}
 [data-testid="stDownloadButton"] button:hover {{
-    background: {ACCENT} !important;
+    background: {ACCENT_DEEP} !important;
+    color: {PAPER} !important;
+    box-shadow: 0 8px 22px -10px rgba(161,74,60,0.55);
+}}
+/* Icon inside the download button. The parent <p> is now a real flex container
+   (see the rule above) — align-items:center on the <p> + matching height on
+   icon and label is what does the centering. We just normalize the icon span
+   itself (color override, kill the default vertical-align:bottom from Material
+   Symbols so it doesn't fight the flex centering). */
+[data-testid="stDownloadButton"] button span[role="img"][translate="no"],
+[data-testid="stDownloadButton"] button [data-testid="stIconMaterial"] {{
+    color: {PAPER} !important;
+    opacity: 1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    vertical-align: middle !important;
+    transform: none !important;
+}}
+/* Explicit color on the inner <p>/markdown wrapper — Streamlit wraps the
+   button label in [data-testid="stMarkdownContainer"] > p, and a global rule
+   on that selector (~line 166) pins color:INK directly on the <p>, beating
+   the color inherited from the button. Without this rule the text reads dark
+   on the terracotta background and is barely legible. */
+[data-testid="stDownloadButton"] button p,
+[data-testid="stDownloadButton"] button [data-testid="stMarkdownContainer"] p,
+[data-testid="stDownloadButton"] button [data-testid="stMarkdownContainer"] {{
     color: {PAPER} !important;
 }}
-
-/* ── Multiselect chips ── */
-[data-baseweb="tag"] {{
-    background-color: {INK} !important;
-    border-radius: {RADIUS} !important;
+/* Make the markdown container itself a flex box so the inner <p> is centered
+   by its box, not by its baseline. Without this the inline-flex <p> baseline-
+   aligns to the container's 25.6px line-box, which puts the icon+text ~3px
+   above the button's optical center (verified via DevTools measurement). */
+[data-testid="stDownloadButton"] button [data-testid="stMarkdownContainer"] {{
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
 }}
-[data-baseweb="tag"] span {{ color: {PAPER} !important; }}
+
+/* ── Multiselect chips — filter state, not CTA. Soft cream-beige pill so a
+   stack of 6+ active filters doesn't dominate the page; the × close icon
+   carries the affordance in ACCENT to echo the download CTA. ── */
+[data-baseweb="tag"] {{
+    background-color: {CHIP_BG} !important;
+    border-radius: {RADIUS} !important;
+    border: 1px solid {HAIRLINE_STRONG} !important;
+}}
+[data-baseweb="tag"] span {{
+    color: {INK} !important;
+}}
+/* Close-icon: BaseWeb tags render the × as an inline SVG (not a Material
+   symbol), so the global Material-icon rule doesn't reach it. Paint both the
+   svg fill and any parent role=presentation wrapper in ACCENT. */
+[data-baseweb="tag"] svg,
+[data-baseweb="tag"] [role="presentation"] {{
+    color: {ACCENT} !important;
+    fill: {ACCENT} !important;
+}}
 
 /* ── Bordered container becomes top-hairline action card ── */
 [data-testid="stVerticalBlockBorderWrapper"] {{
