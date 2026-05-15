@@ -70,6 +70,12 @@ FOREST          = "#3E6E55"
 DISPLAY_FONT = "'Fraunces', 'IBM Plex Serif', Georgia, serif"
 BODY_FONT    = "'Hanken Grotesk', system-ui, sans-serif"
 
+# Single source of truth for rounded-container corners. Change here and every
+# surface that opts in (selectbox, chart frame, modal, dataframe, download
+# button, multiselect tags) updates in lockstep. Tabs and the action-card
+# wrapper intentionally stay square — see the comments at their CSS rules.
+RADIUS = "10px"
+
 # ── CSS injection ────────────────────────────────────────────────────────────
 
 st.markdown(f"""
@@ -134,7 +140,7 @@ section[data-testid="stSidebar"],
 [data-testid="stSidebar"] [data-baseweb="select"] > div {{
     background-color: rgba(14,17,22,0.04) !important;
     border: 1px solid rgba(14,17,22,0.22) !important;
-    border-radius: 0 !important;
+    border-radius: {RADIUS} !important;
 }}
 [data-testid="stSidebar"] [data-baseweb="select"] span,
 [data-testid="stSidebar"] [data-baseweb="select"] svg {{
@@ -312,12 +318,15 @@ hr {{
 }}
 [data-testid="stPlotlyChart"] {{
     border: 1px solid {HAIRLINE};
+    border-radius: {RADIUS};
     background: {PAPER};
+    overflow: hidden;
     transition: border-color 220ms ease, box-shadow 220ms ease;
-    /* No padding/no overflow override: Plotly auto-resizes its SVG to the
-       wrapper's clientHeight, so any inner padding causes the SVG to either
-       overflow (visible) or be clipped (hidden). The 1px border alone is the
-       visual frame; chart content has its own internal margins. */
+    /* No padding/no overflow override on the wrapper's SIZE: Plotly auto-resizes
+       its SVG to the wrapper's clientHeight, so any inner padding causes the SVG
+       to either overflow (visible) or be clipped (hidden). overflow:hidden here
+       is for radius clipping only — it stops the SVG corners from poking past
+       the rounded border on hover; the SVG still sizes to the wrapper. */
 }}
 /* Hover handled via the chartbox container — the chart itself has pointer-events:none
    (the overlay button captures clicks), so its own :hover never fires. */
@@ -389,7 +398,7 @@ hr {{
     padding-bottom: 2rem !important;
     background: {PAPER} !important;
     border: 1px solid {HAIRLINE_STRONG} !important;
-    border-radius: 0 !important;
+    border-radius: {RADIUS} !important;
     box-shadow: 0 40px 80px -20px rgba(14,17,22,0.45) !important;
 }}
 
@@ -398,7 +407,7 @@ hr {{
     /* No overflow:hidden — Streamlit's internal GlideDataEditor manages its
        own scrollbar; wrapping it clips both the scrollbar and rows. */
     border: 1px solid {HAIRLINE};
-    border-radius: 0;
+    border-radius: {RADIUS};
     background: {PAPER};
 }}
 [data-testid="stDataFrame"] [role="row"] {{ background: transparent !important; }}
@@ -408,7 +417,7 @@ hr {{
     background: {INK} !important;
     color: {PAPER} !important;
     border: none !important;
-    border-radius: 0 !important;
+    border-radius: {RADIUS} !important;
     font-family: {BODY_FONT} !important;
     font-weight: 600 !important;
     text-transform: uppercase;
@@ -424,7 +433,7 @@ hr {{
 /* ── Multiselect chips ── */
 [data-baseweb="tag"] {{
     background-color: {INK} !important;
-    border-radius: 0 !important;
+    border-radius: {RADIUS} !important;
 }}
 [data-baseweb="tag"] span {{ color: {PAPER} !important; }}
 
