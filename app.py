@@ -370,6 +370,14 @@ hr {{
     padding: 0 !important;
 }}
 
+/* ── Selectbox cursor: BaseWeb's Select renders a real <input> inside the
+   combobox (for typeahead filtering), which defaults to cursor:text. Force
+   pointer on the wrapper AND every descendant so the input doesn't win. ── */
+[data-baseweb="select"],
+[data-baseweb="select"] * {{
+    cursor: pointer !important;
+}}
+
 /* ── Dialog (chart fullscreen modal) ── */
 [role="dialog"][aria-modal="true"] {{
     max-width: 94vw !important;
