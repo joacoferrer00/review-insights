@@ -1,6 +1,11 @@
 [theme]
-primaryColor = "#4a90d9"
-backgroundColor = "#0e1117"
-secondaryBackgroundColor = "#1a1f2e"
-textColor = "#e0e4ef"
+primaryColor = "#0E1116"
+backgroundColor = "#F5F1E8"
+secondaryBackgroundColor = "#ECE6D4"
+# Without this, Streamlit mixes backgroundColor + secondaryBackgroundColor for
+# the dataframe header — and the mix of two warm-light tones reads as near-white,
+# breaking the cream/beige palette. Pin it to BEIGE so the header matches the
+# sidebar background.
+dataframeHeaderBackgroundColor = "#ECE6D4"
+textColor = "#0E1116"
 font = "sans serif"

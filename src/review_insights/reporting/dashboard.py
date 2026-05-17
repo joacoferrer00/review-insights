@@ -3,15 +3,15 @@
 from pathlib import Path
 
 import pandas as pd
-import plotly.graph_objects as go
 import plotly.express as px
+import plotly.graph_objects as go
 
 # ── Color palette ────────────────────────────────────────────────────────────
 
-SENTIMENT_COLORS = {"positive": "#008450", "neutral": "#7a8499", "negative": "#B81D13"}
-URGENCY_COLORS = {"high": "#B81D13", "medium": "#c49a3c", "low": "#008450"}
-HIGHLIGHT_COLOR = "#4a90d9"
-HEATMAP_SCALE = ["#131929", "#1a2f52", "#25467a", "#3666a8", "#4a90d9"]
+SENTIMENT_COLORS = {"positive": "#3E6E55", "neutral": "#9C8E6A", "negative": "#A14A3C"}
+URGENCY_COLORS = {"high": "#A14A3C", "medium": "#C49A3C", "low": "#3E6E55"}
+HIGHLIGHT_COLOR = "#0E1116"
+HEATMAP_SCALE = ["#F5F1E8", "#E8D9B0", "#D9B677", "#C49A3C", "#A14A3C"]
 
 
 def sentiment_display_map(strings: dict) -> dict[str, str]:
@@ -89,7 +89,7 @@ def chart_top_topics(insights_df: pd.DataFrame, business: str, layout_extras: di
         y="main_topic",
         orientation="h",
         color="pct_negative",
-        color_continuous_scale=["#008450", "#c49a3c", "#B81D13"],
+        color_continuous_scale=["#3E6E55", "#C49A3C", "#A14A3C"],
         labels={"mention_count": mentions_label, "main_topic": "", "pct_negative": pct_neg_label},
     )
     fig.update_layout(

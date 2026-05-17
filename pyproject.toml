@@ -48,6 +48,15 @@ target-version = "py311"
 select = ["E", "F", "I", "N", "UP", "B", "SIM"]
 ignore = ["E501"]
 
+# app.py intentionally orders code before imports:
+#   1. sys.path mutation + sys.modules purge MUST run before any `review_insights.*`
+#      import so Streamlit's hot-reload picks up edits to the package.
+#   2. `st.set_page_config(...)` MUST be the first Streamlit call in a script, before
+#      any other st.* import-time side effects.
+# Silencing E402 (module-level import not at top of file) for this file only.
+[tool.ruff.lint.per-file-ignores]
+"app.py" = ["E402"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
