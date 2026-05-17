@@ -41,10 +41,7 @@ from review_insights.reporting.dashboard import (
     load_insights,
 )
 
-client_slug = st.query_params.get("client")
-if not client_slug:
-    st.error("Missing **?client=** parameter. Example: `?client=ida`")
-    st.stop()
+client_slug = st.query_params.get("client", "wegmans")
 
 try:
     cfg = load_client_config(client_slug)
